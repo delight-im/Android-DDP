@@ -1,0 +1,8 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="im.delight.android.ddp">
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+    <application />
+</manifest>
