@@ -1,0 +1,22 @@
+html {
+	margin: 0;
+	padding: 0;
+}
+body {
+	margin: 8px;
+	padding: 0;
+}
+button.btn-full-width {
+	display: block;
+	width: 100%;
+	margin: 0;
+	background-color: #333;
+	color: #eee;
+	padding: 6px 12px;
+	border: 0;
+	font-weight: bold;
+}
+.text-code {
+	font-family: monospace;
+	font-size: 12px;
+}
