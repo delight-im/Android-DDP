@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Android-DDP-Examples</string>
-    <string name="hello_world">Hello, Android DDP!</string>
+    <string name="app_name">Android-DDP</string>
+    <string name="hello_world">Android DDP</string>
 </resources>
