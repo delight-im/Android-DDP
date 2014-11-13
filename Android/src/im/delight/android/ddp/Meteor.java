@@ -16,6 +16,8 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 import java.util.Iterator;
 import org.codehaus.jackson.map.ObjectMapper;
 import java.util.UUID;
@@ -50,6 +52,8 @@ public class Meteor {
 	private final Map<String, Listener> mListeners;
 	/** Map that tracks active suscriptions by name */
 	private final Map<String, String> mSubscriptions;
+	/** Messages that couldn't be dispatched yet and thus had to be queued */
+	private final Queue<String> mQueuedMessages;
 	private String mServerUri;
 	private String mDdpVersion;
 	/** The number of unsuccessful attempts to re-connect in sequence */
@@ -131,6 +135,9 @@ public class Meteor {
 		// create a map that holds all active subscriptions by name
 		mSubscriptions = new HashMap<String, String>();
 
+		// create a queue that holds undispatched messages waiting to be sent
+		mQueuedMessages = new ConcurrentLinkedQueue<String>();
+
 		// save the server URI
 		mServerUri = serverUri;
 		// try with the preferred DDP protocol version first
@@ -200,7 +207,10 @@ public class Meteor {
 		mListeners.clear();
 		mSessionID = null;
 		mCallback = null;
-		mConnection.disconnect();
+		try {
+			mConnection.disconnect();
+		}
+		catch (Exception e) { }
 	}
 
 	/**
@@ -208,8 +218,16 @@ public class Meteor {
 	 *
 	 * @param obj the Java object to send
 	 */
-	private void send(Object obj) {
-		send(toJson(obj));
+	private void send(final Object obj) {
+		// serialize the object to JSON
+		final String jsonStr = toJson(obj);
+
+		if (jsonStr == null) {
+			throw new RuntimeException("Object would be serialized to `null`");
+		}
+
+		// send the JSON string
+		send(jsonStr);
 	}
 
 	/**
@@ -218,8 +236,18 @@ public class Meteor {
 	 * @param message the string to send
 	 */
 	private void send(final String message) {
-		log("SEND: "+message);
-		mConnection.sendTextMessage(message);
+		if (message == null) {
+			throw new RuntimeException("You cannot send `null` messages");
+		}
+
+		if (mConnected) {
+			log("SEND: "+message);
+			mConnection.sendTextMessage(message);
+		}
+		else {
+			log("QUEUE: "+message);
+			mQueuedMessages.add(message);
+		}
 	}
 
 	/**
@@ -285,6 +313,11 @@ public class Meteor {
 
 					if (mCallback != null) {
 						mCallback.onConnect();
+					}
+
+					// try to dispatch queued messages now
+					for (String queuedMessage : mQueuedMessages) {
+						send(queuedMessage);
 					}
 				}
 				else if (message.equals(Protocol.Message.FAILED)) {
