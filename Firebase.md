@@ -2,6 +2,10 @@
 
 This library aims to clone the [Firebase](https://www.firebase.com/) API for Android and intends to become a complete drop-in replacement.
 
+The Firebase replacement library is implemented in the [`firebase`](Android/src/im/delight/android/ddp/firebase) package and based on the [`ddp`](Android/src/im/delight/android/ddp) package.
+
+The server, which is a Meteor instance with custom methods, [can be found here](Server/).
+
 > Don't build your house on someone else's platform.
 >
 > — Paul Anthony
