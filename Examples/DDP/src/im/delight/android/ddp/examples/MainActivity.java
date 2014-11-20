@@ -44,10 +44,10 @@ public class MainActivity extends Activity implements MeteorCallback {
 		System.out.println("Connected");
 
 		// subscribe to data from the server
-		mMeteor.subscribe("publicMessages");
+		String subscriptionId = mMeteor.subscribe("publicMessages");
 
-		// unsubscribe from data again
-		mMeteor.unsubscribe("publicMessages");
+		// unsubscribe from data again (usually done later or not at all)
+		mMeteor.unsubscribe(subscriptionId);
 
 		// insert data into a collection
 		Map<String, Object> insertValues = new HashMap<String, Object>();
