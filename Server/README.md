@@ -30,3 +30,7 @@ Because MongoDB is used as the database engine, we have to store all data *flat*
  7. Get the current server time:
 
     `{"msg":"method","method":"getServerTime","params":[],"id":"client-event-3"}`
+
+ 8. Reset (clear) the whole database:
+
+    `{"msg":"method","method":"reset","params":[],"id":"client-event-4"}`
