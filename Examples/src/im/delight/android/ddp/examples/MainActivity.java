@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 		setContentView(R.layout.activity_main);
 
 		// create a new instance (protocol version in second parameter is optional)
-		mMeteor = new Meteor("ws://my-example.meteor.com/websocket");
+		mMeteor = new Meteor("ws://example.meteor.com/websocket");
 
 		// register the callback that will handle events and receive messages
 		mMeteor.setCallback(this);
