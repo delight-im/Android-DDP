@@ -39,7 +39,7 @@ public class Meteor {
 	/** Supported versions of the DDP protocol in order of preference */
 	private static final String[] SUPPORTED_DDP_VERSIONS = { "1", "pre2", "pre1" };
 	/** Whether logging should be enabled or not (behaviour can be adjusted in log() method */
-	private static final boolean LOGGING_ENABLED = false;
+	private static final boolean LOGGING_ENABLED = true;
 	/** The maximum number of attempts to re-connect to the server over WebSocket */
 	private static final int RECONNECT_ATTEMPTS_MAX = 5;
 	/** Instance of Jackson library's ObjectMapper that converts between JSON and Java objects (POJOs) */
@@ -50,8 +50,6 @@ public class Meteor {
 	private final WebSocketHandler mWebSocketHandler;
 	/** Map that tracks all pending Listener instances */
 	private final Map<String, Listener> mListeners;
-	/** Map that tracks active suscriptions by name */
-	private final Map<String, String> mSubscriptions;
 	/** Messages that couldn't be dispatched yet and thus had to be queued */
 	private final Queue<String> mQueuedMessages;
 	private String mServerUri;
@@ -131,9 +129,6 @@ public class Meteor {
 
 		// create a map that holds the pending Listener instances
 		mListeners = new HashMap<String, Listener>();
-
-		// create a map that holds all active subscriptions by name
-		mSubscriptions = new HashMap<String, String>();
 
 		// create a queue that holds undispatched messages waiting to be sent
 		mQueuedMessages = new ConcurrentLinkedQueue<String>();
@@ -732,9 +727,10 @@ public class Meteor {
 	 * Subscribes to a specific subscription from the server
 	 *
 	 * @param subscriptionName the name of the subscription
+	 * @return the generated subscription ID (must be used when unsubscribing)
 	 */
-	public void subscribe(final String subscriptionName) {
-		subscribe(subscriptionName, null);
+	public String subscribe(final String subscriptionName) {
+		return subscribe(subscriptionName, null);
 	}
 
 	/**
@@ -742,9 +738,10 @@ public class Meteor {
 	 *
 	 * @param subscriptionName the name of the subscription
 	 * @param params the subscription parameters
+	 * @return the generated subscription ID (must be used when unsubscribing)
 	 */
-	public void subscribe(final String subscriptionName, final Object[] params) {
-		subscribe(subscriptionName, params, null);
+	public String subscribe(final String subscriptionName, final Object[] params) {
+		return subscribe(subscriptionName, params, null);
 	}
 
 	/**
@@ -753,13 +750,9 @@ public class Meteor {
 	 * @param subscriptionName the name of the subscription
 	 * @param params the subscription parameters
 	 * @param listener the listener to call on success/error
+	 * @return the generated subscription ID (must be used when unsubscribing)
 	 */
-	public void subscribe(final String subscriptionName, final Object[] params, final SubscribeListener listener) {
-		// if there is already an active subscription with that name
-		if (mSubscriptions.containsKey(subscriptionName)) {
-			return;
-		}
-
+	public String subscribe(final String subscriptionName, final Object[] params, final SubscribeListener listener) {
 		// create a new unique ID for this request
 		final String subscriptionId = uniqueID();
 
@@ -767,9 +760,6 @@ public class Meteor {
 		if (listener != null) {
 			mListeners.put(subscriptionId, listener);
 		}
-
-		// add this subscription to the list of active subscriptions
-		mSubscriptions.put(subscriptionName, subscriptionId);
 
 		// send the request
 		final Map<String, Object> data = new HashMap<>();
@@ -780,38 +770,31 @@ public class Meteor {
 			data.put(Protocol.Field.PARAMS, params);
 		}
 		send(data);
+		
+		// return the generated subscription ID
+		return subscriptionId;
 	}
 
 	/**
 	 * Unsubscribes from the subscription with the specified name
 	 *
-	 * @param subscriptionName the name of the subscription
+	 * @param subscriptionId the ID of the subscription
 	 */
-	public void unsubscribe(final String subscriptionName) {
-		unsubscribe(subscriptionName, null);
+	public void unsubscribe(final String subscriptionId) {
+		unsubscribe(subscriptionId, null);
 	}
 
 	/**
 	 * Unsubscribes from the subscription with the specified name
 	 *
-	 * @param subscriptionName the name of the subscription
+	 * @param subscriptionId the ID of the subscription
 	 * @param listener the listener to call on success/error
 	 */
-	public void unsubscribe(final String subscriptionName, final UnsubscribeListener listener) {
-		// if there is no active subscription with that name
-		if (!mSubscriptions.containsKey(subscriptionName)) {
-			return;
-		}
-
-		final String subscriptionId = mSubscriptions.get(subscriptionName);
-
+	public void unsubscribe(final String subscriptionId, final UnsubscribeListener listener) {
 		// save a reference to the listener to be executed later
 		if (listener != null) {
 			mListeners.put(subscriptionId, listener);
 		}
-
-		// remove this subscription from the list of active subscriptions
-		mSubscriptions.remove(subscriptionName);
 
 		// send the request
 		final Map<String, Object> data = new HashMap<>();
