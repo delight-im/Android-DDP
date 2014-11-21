@@ -16,10 +16,7 @@ Besides providing the DDP client for Android/Java, this project also aims to bui
 
     `<uses-permission android:name="android.permission.INTERNET" />`
 
- 4. Look at our examples for a quick introduction
-
-    * [DDP client for Meteor](Examples/DDP/)
-    * [Firebase replacement](Examples/Firebase/)
+ 4. Look at our [basic example](Examples/DDP/) for a quick introduction to the usage of the DDP client
 
 ## Contributing
 

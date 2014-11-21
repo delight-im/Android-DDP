@@ -30,8 +30,6 @@ import java.util.Map;
  * Client that clones the Firebase API for Android and is intended to become a complete drop-in replacement
  *
  * This lets you connect to Meteor server just as you would connect to Firebase with their official SDK
- *
- * Just replace `com.firebase.client.` with `im.delight.android.ddp.firebase.` in your imports for the Firebase client
  */
 public class Firebase extends Query {
 

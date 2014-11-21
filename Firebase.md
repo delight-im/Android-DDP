@@ -1,6 +1,6 @@
 # Firebase
 
-This library aims to clone the [Firebase](https://www.firebase.com/) API for Android and intends to become a complete drop-in replacement.
+This project aims to clone the [Firebase](https://www.firebase.com/) API for Android and intends to become a complete drop-in replacement.
 
 The Firebase replacement library is implemented in the [`firebase`](Android/src/im/delight/android/ddp/firebase) package and based on the [`ddp`](Android/src/im/delight/android/ddp) package.
 
@@ -10,13 +10,17 @@ The server, which is a Meteor instance with custom methods, [can be found here](
 >
 > — Paul Anthony
 
-This lets you connect to your own Meteor server just as you would connect to Firebase with their official SDK.
+## The goal
 
-In the end, you should be able to just replace `com.firebase.client.*` with `im.delight.android.ddp.firebase.*` in your Java imports.
+This library lets you connect to your own Meteor server just as you would connect to Firebase with their official SDK.
+
+In the end, you should be able to just replace `import com.firebase.client.` with `import im.delight.android.ddp.firebase.` in your Java files and be ready to run the same application code with your own Meteor server.
 
 > Don't be a Google Bitch, don't be a Facebook Bitch, and don't be a Twitter Bitch. Be your own Bitch.
 >
 > — Fred Wilson
+
+## Why this is important
 
 Firebase is an awesome service. But if you build your product and infrastructure around a PaaS/BaaS, you usually don't get the amount of reliability and guaranteed support for the future that you'd love to have. Thus it's always good to have a safe replacement up your sleeve.
 
@@ -28,4 +32,10 @@ Firebase is an awesome service. But if you build your product and infrastructure
 
 ## Examples
 
-An example app for Android [can be found here](Examples/Firebase/). It shows some of the Firebase features being implemented with this library and a self-hosted Meteor server using the [server code](Server/) that is also included in this project.
+### [Basic example](Examples/Firebase/)
+
+The basic example shows how the most important Firebase features are implemented. This library is used as a drop-in replacement and provides a self-hosted solution.
+
+### [`AndroidChat` example](https://github.com/delight-im/AndroidChat)
+
+This is the official `AndroidChat` example from Firebase — implemented with this library as a drop-in replacement on the client and server. See the short list of [required changes](https://github.com/delight-im/AndroidChat/commits/master) that had to be applied to make this work.
