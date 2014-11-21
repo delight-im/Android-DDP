@@ -42,4 +42,17 @@ public class PersonBean {
 		return location;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PersonBean [name=");
+		builder.append(name);
+		builder.append(", age=");
+		builder.append(age);
+		builder.append(", location=");
+		builder.append(location);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

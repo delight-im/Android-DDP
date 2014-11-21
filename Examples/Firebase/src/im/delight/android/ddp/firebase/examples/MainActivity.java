@@ -135,6 +135,20 @@ public class MainActivity extends Activity {
 		// create an automatically named child with `push()`
 		final Firebase pushedRef = usersRef.getParent().child("randomEntries").push();
 
+		// read a plain Java object (POJO) from storage
+		pushedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+			@Override
+			public void onDataChange(DataSnapshot snapshot) {
+				PersonBean personBean = snapshot.getValue(PersonBean.class);
+				Toast.makeText(context, "PersonBean received: "+personBean, Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onCancelled(FirebaseError error) { }
+
+		});
+
 		// write a plain Java object (POJO) to the storage that will be serialized automatically
 		PersonBean personBean = new PersonBean();
 		personBean.name = "John Doe";
