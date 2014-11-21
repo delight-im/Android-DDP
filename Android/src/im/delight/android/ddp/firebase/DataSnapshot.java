@@ -16,6 +16,7 @@ package im.delight.android.ddp.firebase;
  * limitations under the License.
  */
 
+import java.io.IOException;
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.firebase.util.Path;
 import im.delight.android.ddp.MongoDb;
@@ -291,6 +292,42 @@ public class DataSnapshot {
 	 */
 	public <T> T getValue(Class<T> valueType) {
 		return valueType.cast(getValue());
+	}
+
+	public String toJson() {
+		return toJson(0);
+	}
+
+	private String toJson(final int depth) {
+		try {
+			final StringBuilder out = new StringBuilder();
+
+			if (depth > 0) {
+				out.append(mObjectMapper.writeValueAsString(mKey));
+				out.append(":");
+			}
+
+			if (mChildren != null && mChildren.size() > 0) {
+				out.append("{");
+				int counter = 0;
+				for (Map.Entry<String, DataSnapshot> entry : mChildren.entrySet()) {
+					if (counter > 0) {
+						out.append(",");
+					}
+					out.append(entry.getValue().toJson(depth + 1));
+					counter++;
+				}
+				out.append("}");
+			}
+			else {
+				out.append(mObjectMapper.writeValueAsString(mValue));
+			}
+
+			return out.toString();
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
