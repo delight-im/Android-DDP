@@ -58,7 +58,7 @@ public class Query {
 
 				// execute all child listeners attached to this location's parent
 				ListenerPool.ChildEvent childListeners = ListenerPool.ChildEvent.getInstance(new Path(documentID).getParent());
-				childListeners.onChildAdded(snapshot.getParent(), null);
+				childListeners.onChildAdded(snapshot, null);
 			}
 		}
 
@@ -79,7 +79,7 @@ public class Query {
 
 				// execute all child listeners attached to this location's parent
 				ListenerPool.ChildEvent childListeners = ListenerPool.ChildEvent.getInstance(new Path(documentID).getParent());
-				childListeners.onChildChanged(snapshot.getParent(), null);
+				childListeners.onChildChanged(snapshot, null);
 			}
 		}
 
