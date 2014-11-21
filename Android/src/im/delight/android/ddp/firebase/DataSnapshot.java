@@ -16,6 +16,7 @@ package im.delight.android.ddp.firebase;
  * limitations under the License.
  */
 
+import org.codehaus.jackson.type.TypeReference;
 import java.io.IOException;
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.firebase.util.Path;
@@ -280,7 +281,13 @@ public class DataSnapshot {
 			return mValue;
 		}
 		else {
-			throw new RuntimeException("Not implemented yet"); // TODO implement
+			final JsonNode jsonNode = parseJson(toJson());
+			try {
+				return mObjectMapper.readValue(jsonNode, new TypeReference<Map<String, Object>>() {});
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -291,7 +298,13 @@ public class DataSnapshot {
 	 * @return the data as an instance of the specified class
 	 */
 	public <T> T getValue(Class<T> valueType) {
-		return valueType.cast(getValue());
+		final JsonNode jsonNode = parseJson(toJson());
+		try {
+			return mObjectMapper.readValue(jsonNode, valueType);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public String toJson() {
