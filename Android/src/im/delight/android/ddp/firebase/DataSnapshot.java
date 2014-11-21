@@ -16,6 +16,7 @@ package im.delight.android.ddp.firebase;
  * limitations under the License.
  */
 
+import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.firebase.util.Path;
 import im.delight.android.ddp.MongoDb;
 import java.util.Iterator;
@@ -134,7 +135,10 @@ public class DataSnapshot {
 				child(key, true).setFieldsFromJson(value.toString());
 			}
 		}
-		System.out.println(mRoot.toString()); // XXX remove
+
+		if (mRoot != null) {
+			Meteor.log(mRoot.toString());
+		}
 	}
 
 	protected static Object parseValue(String json) {
@@ -210,7 +214,10 @@ public class DataSnapshot {
 		if (mParent != null) {
 			mParent.mChildren.remove(getKey());
 		}
-		System.out.println(mRoot.toString()); // XXX remove
+
+		if (mRoot != null) {
+			Meteor.log(mRoot.toString());
+		}
 	}
 
 	public DataSnapshot getParent() {
@@ -300,6 +307,7 @@ public class DataSnapshot {
 	 *
 	 * @return a reference to the source location
 	 */
+	@SuppressWarnings("static-method")
 	public Firebase getRef() {
 		throw new RuntimeException("Not implemented yet"); // TODO implement
 	}
