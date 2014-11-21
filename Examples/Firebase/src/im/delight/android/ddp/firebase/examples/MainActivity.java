@@ -16,6 +16,7 @@ package im.delight.android.ddp.firebase.examples;
  * limitations under the License.
  */
 
+import android.content.Context;
 import im.delight.android.ddp.firebase.ServerValue;
 import im.delight.android.ddp.firebase.ChildEventListener;
 import im.delight.android.ddp.firebase.DataSnapshot;
@@ -32,11 +33,14 @@ import android.os.Bundle;
 public class MainActivity extends Activity {
 
 	private static final String SERVER_URL = "ws://example.meteor.com/websocket";
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		context = getApplicationContext();
 
 		// set the Android context (which has no effect here and is only there for compatibility)
 		Firebase.setAndroidContext(this);
@@ -61,7 +65,7 @@ public class MainActivity extends Activity {
 			public void onDataChange(DataSnapshot snapshot) {
 				final boolean connected = snapshot.getValue(Boolean.class);
 				final String status = connected ? "connected" : "disconnected";
-				System.out.println("Connectivity changed: "+status);
+				Toast.makeText(context, "Connectivity changed: "+status, Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -74,7 +78,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
-				System.out.println("Server time offset received: "+snapshot.getValue(Long.class));
+				Toast.makeText(context, "Server time offset received: "+snapshot.getValue(Long.class), Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -87,28 +91,26 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
-				// TODO implement
+				Toast.makeText(context, "Child added on reference `"+snapshot.getKey()+"`", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-				// TODO implement
+				Toast.makeText(context, "Child changed on reference `"+snapshot.getKey()+"`", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onChildRemoved(DataSnapshot snapshot) {
-				// TODO implement
+				Toast.makeText(context, "Child removed on reference `"+snapshot.getKey()+"`", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onChildMoved(DataSnapshot snapshot, String previousChildName) {
-				// TODO implement
+				Toast.makeText(context, "Child moved on reference `"+snapshot.getKey()+"`", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
-			public void onCancelled(FirebaseError error) {
-				// TODO implement
-			}
+			public void onCancelled(FirebaseError error) { }
 
 		});
 
@@ -117,7 +119,15 @@ public class MainActivity extends Activity {
 		johnDoeData.put("score", 1024);
 		johnDoeData.put("active", false);
 		johnDoeData.put("last_online", ServerValue.TIMESTAMP);
-		usersRef.child("john_doe").updateChildren(johnDoeData, createCompletionListener());
+		usersRef.child("john_doe").updateChildren(johnDoeData, new CompletionListener() {
+
+			@Override
+			public void onComplete(FirebaseError error, Firebase ref) {
+				String response = "Listener on `"+ref.getKey()+"` completed "+(error != null ? "with an error" : "successfully");
+				Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+			}
+
+		});
 
 		// write a node's priority only
 		usersRef.child("john_doe").child("score").setPriority(500);
@@ -125,24 +135,12 @@ public class MainActivity extends Activity {
 		// create an automatically named child with `push()`
 		final Firebase pushedRef = usersRef.getParent().child("randomEntries").push();
 
-		// write a normal Java object (POJO) to the storage that will be serialized automatically
+		// write a plain Java object (POJO) to the storage that will be serialized automatically
 		PersonBean personBean = new PersonBean();
 		personBean.name = "John Doe";
 		personBean.age = 42;
 		personBean.location = "Example City";
 		pushedRef.setValue(personBean);
-	}
-
-	private CompletionListener createCompletionListener() {
-		return new CompletionListener() {
-
-			@Override
-			public void onComplete(FirebaseError error, Firebase ref) {
-				String response = "Listener on `"+ref.getKey()+"` completed "+(error != null ? "with an error" : "successfully");
-				Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
-			}
-
-		};
 	}
 
 	@Override
