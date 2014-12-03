@@ -10,13 +10,18 @@ Besides providing the DDP client for Android/Java, this project also aims to bui
 
 ## Installation
 
- 1. Reference this library as a library project in your app
- 2. Make sure all [dependencies](#dependencies) of this library are included
- 3. Add the Internet permission to your app's `AndroidManifest.xml`:
+ * Include this library in your project
+   * JARs
+     * Include one of the [JARs](Android/JARs) in your `libs` folder
+   * or
+   * Library project
+     * Reference this project as a library project
+	 * Make sure that all [dependencies](#dependencies) are included
+ * Add the Internet permission to your app's `AndroidManifest.xml`:
 
     `<uses-permission android:name="android.permission.INTERNET" />`
 
- 4. Look at our [basic example](Examples/DDP/) for a quick introduction to the usage of the DDP client
+ * Look at our [basic example](Examples/DDP/) for a quick introduction to the usage of the DDP client
 
 ## Contributing
 
