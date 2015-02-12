@@ -11,7 +11,7 @@ Besides providing the DDP client for Android/Java, this project also aims to bui
 ## Installation
 
  * Add this library to your project
-   * Include one of the [JARs](Android/JARs) (usually `*-bundle.jar`) in your `libs` folder
+   * Include one of the [JARs](Android/JARs) in your `libs` folder
    * or
    * Copy the Java package to your project's source folder
    * or
