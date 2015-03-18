@@ -630,6 +630,55 @@ public class Meteor {
 	}
 
 	/**
+	 * Registers a new user with the specified username, email address and password
+	 *
+	 * This method will automatically login as the new user on success
+	 *
+	 * Please note that this requires the `accounts-password` package
+	 *
+	 * @param username the username to register with (either this or `email` is required)
+	 * @param email the email address to register with (either this or `username` is required)
+	 * @param password the password to register with
+	 * @param listener the listener to call on success/error
+	 */
+	public void registerAndLogin(final String username, final String email, final String password, final ResultListener listener) {
+		registerAndLogin(username, email, password, null, listener);
+	}
+
+	/**
+	 * Registers a new user with the specified username, email address and password
+	 *
+	 * This method will automatically login as the new user on success
+	 *
+	 * Please note that this requires the `accounts-password` package
+	 *
+	 * @param username the username to register with (either this or `email` is required)
+	 * @param email the email address to register with (either this or `username` is required)
+	 * @param password the password to register with
+	 * @param profile the user's profile data, typically including a `name` field
+	 * @param listener the listener to call on success/error
+	 */
+	public void registerAndLogin(final String username, final String email, final String password, final HashMap<String, Object> profile, final ResultListener listener) {
+		if (username == null && email == null) {
+			throw new RuntimeException("You must provide either a username or an email address");
+		}
+
+		final Map<String, Object> accountData = new HashMap<String, Object>();
+		if (username != null) {
+			accountData.put("username", username);
+		}
+		if (email != null) {
+			accountData.put("email", email);
+		}
+		accountData.put("password", password);
+		if (profile != null) {
+			accountData.put("profile", profile);
+		}
+
+		call("createUser", new Object[] { accountData }, listener);
+	}
+
+	/**
 	 * Executes a remote procedure call (any Java objects (POJOs) will be serialized to JSON by the Jackson library)
 	 *
 	 * @param methodName the name of the method to call, e.g. `/someCollection.insert`
