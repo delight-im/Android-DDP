@@ -630,6 +630,61 @@ public class Meteor {
 	}
 
 	/**
+	 * Sign in the user with the given username and password
+	 *
+	 * Please note that this requires the `accounts-password` package
+	 *
+	 * @param username the username to sign in with
+	 * @param password the password to sign in with
+	 * @param listener the listener to call on success/error
+	 */
+	public void loginWithUsername(final String username, final String password, final ResultListener listener) {
+		login(username, null, password, listener);
+	}
+
+	/**
+	 * Sign in the user with the given email address and password
+	 *
+	 * Please note that this requires the `accounts-password` package
+	 *
+	 * @param email the email address to sign in with
+	 * @param password the password to sign in with
+	 * @param listener the listener to call on success/error
+	 */
+	public void loginWithEmail(final String email, final String password, final ResultListener listener) {
+		login(null, email, password, listener);
+	}
+
+	/**
+	 * Sign in the user with the given username or email address and the specified password
+	 *
+	 * Please note that this requires the `accounts-password` package
+	 *
+	 * @param username the username to sign in with (either this or `email` is required)
+	 * @param email the email address to sign in with (either this or `username` is required)
+	 * @param password the password to sign in with
+	 * @param listener the listener to call on success/error
+	 */
+	private void login(final String username, final String email, final String password, final ResultListener listener) {
+		final Map<String, Object> userData = new HashMap<String, Object>();
+		if (username != null) {
+			userData.put("username", username);
+		}
+		else if (email != null) {
+			userData.put("email", email);
+		}
+		else {
+			throw new RuntimeException("You must provide either a username or an email address");
+		}
+
+		final Map<String, Object> authData = new HashMap<String, Object>();
+		authData.put("user", userData);
+		authData.put("password", password);
+
+		call("login", new Object[] { authData }, listener);
+	}
+
+	/**
 	 * Registers a new user with the specified username, email address and password
 	 *
 	 * This method will automatically login as the new user on success
