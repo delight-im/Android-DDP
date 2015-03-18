@@ -4,10 +4,6 @@ This library implements the [Distributed Data Protocol](https://www.meteor.com/d
 
 Connect your native Android apps, written in Java, to apps built with the [Meteor](https://www.meteor.com/) framework and build real-time features.
 
-## Firebase
-
-Besides providing the DDP client for Android/Java, this project also aims to build a complete [drop-in replacement for Firebase](Firebase.md) on Android.
-
 ## Installation
 
  * Add this library to your project
@@ -21,6 +17,10 @@ Besides providing the DDP client for Android/Java, this project also aims to bui
     `<uses-permission android:name="android.permission.INTERNET" />`
 
  * Look at our [basic example](Examples/DDP/) for a quick introduction to the usage of the DDP client
+
+## Firebase
+
+Besides providing the DDP client for Android/Java, this project also aims to build a complete [drop-in replacement for Firebase](Firebase.md) on Android.
 
 ## Contributing
 
