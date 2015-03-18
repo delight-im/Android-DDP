@@ -34,8 +34,6 @@ import de.tavendo.autobahn.WebSocketConnection;
 /** Client that connects to Meteor servers implementing the DDP protocol */
 public class Meteor {
 
-	/** Internal version name for this library that follows the Semantic Versioning scheme */
-	public static final String LIBRARY_VERSION_NAME = "0.0.1";
 	/** Supported versions of the DDP protocol in order of preference */
 	private static final String[] SUPPORTED_DDP_VERSIONS = { "1", "pre2", "pre1" };
 	/** Whether logging should be enabled or not (behaviour can be adjusted in log() method */
@@ -770,7 +768,7 @@ public class Meteor {
 			data.put(Protocol.Field.PARAMS, params);
 		}
 		send(data);
-		
+
 		// return the generated subscription ID
 		return subscriptionId;
 	}

@@ -16,10 +16,8 @@ package im.delight.android.ddp.firebase;
  * limitations under the License.
  */
 
-import im.delight.android.ddp.Meteor;
-
 public class Version {
 
-	public static final String SDK_VERSION = Meteor.LIBRARY_VERSION_NAME;
+	public static final String SDK_VERSION = "0.0.0";
 
 }
