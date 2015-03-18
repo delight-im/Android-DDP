@@ -16,6 +16,7 @@ package im.delight.android.ddp.examples;
  * limitations under the License.
  */
 
+import im.delight.android.ddp.ResultListener;
 import java.util.Map;
 import java.util.HashMap;
 import im.delight.android.ddp.Meteor;
@@ -42,6 +43,36 @@ public class MainActivity extends Activity implements MeteorCallback {
 	@Override
 	public void onConnect() {
 		System.out.println("Connected");
+
+		// sign up for a new account
+		mMeteor.registerAndLogin("john-doe", "john.doe@example.com", "password1", new ResultListener() {
+
+			@Override
+			public void onSuccess(String result) {
+				System.out.println("Successfully registered: "+result);
+			}
+
+			@Override
+			public void onError(String error, String reason, String details) {
+				System.out.println("Could not register: "+error+" / "+reason+" / "+details);
+			}
+
+		});
+
+		// sign in to the server
+		mMeteor.loginWithUsername("john-doe", "password1", new ResultListener() {
+
+			@Override
+			public void onSuccess(String result) {
+				System.out.println("Successfully logged in: "+result);
+			}
+
+			@Override
+			public void onError(String error, String reason, String details) {
+				System.out.println("Could not log in: "+error+" / "+reason+" / "+details);
+			}
+
+		});
 
 		// subscribe to data from the server
 		String subscriptionId = mMeteor.subscribe("publicMessages");
