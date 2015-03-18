@@ -4,6 +4,10 @@ This library implements the [Distributed Data Protocol](https://www.meteor.com/d
 
 Connect your native Android apps, written in Java, to apps built with the [Meteor](https://www.meteor.com/) framework and build real-time features.
 
+## Usage
+
+Look at our [basic example](Examples/DDP/src/im/delight/android/ddp/examples/MainActivity.java) for a quick introduction to the usage of the DDP client
+
 ## Installation
 
  * Add this library to your project
@@ -15,8 +19,6 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
  * Add the Internet permission to your app's `AndroidManifest.xml`:
 
     `<uses-permission android:name="android.permission.INTERNET" />`
-
- * Look at our [basic example](Examples/DDP/) for a quick introduction to the usage of the DDP client
 
 ## Firebase
 
