@@ -90,8 +90,8 @@ public class MainActivity extends Activity implements MeteorCallback {
 		Map<String, Object> updateQuery = new HashMap<String, Object>();
 		updateQuery.put("_id", "my-key");
 		Map<String, Object> updateValues = new HashMap<String, Object>();
-		insertValues.put("_id", "my-key");
-		insertValues.put("some-number", 5);
+		updateValues.put("_id", "my-key");
+		updateValues.put("some-number", 5);
 		mMeteor.update("my-collection", updateQuery, updateValues);
 
 		// remove data from a collection
