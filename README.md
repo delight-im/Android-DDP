@@ -4,10 +4,6 @@ This library implements the [Distributed Data Protocol](https://www.meteor.com/d
 
 Connect your native Android apps, written in Java, to apps built with the [Meteor](https://www.meteor.com/) framework and build real-time features.
 
-## Usage
-
-Look at our [basic example](Examples/DDP/src/im/delight/android/ddp/examples/MainActivity.java) for a quick introduction to the usage of the DDP client
-
 ## Installation
 
  * Add this library to your project
@@ -20,9 +16,101 @@ Look at our [basic example](Examples/DDP/src/im/delight/android/ddp/examples/Mai
 
     `<uses-permission android:name="android.permission.INTERNET" />`
 
-## Firebase
+## Usage
 
-Besides providing the DDP client for Android/Java, this project also aims to build a complete [drop-in replacement for Firebase](Firebase.md) on Android.
+ * Creating a new instance of the DDP client
+
+   ```
+   public class MyActivity extends Activity implements MeteorCallback {
+   
+       private Meteor mMeteor;
+   
+       @Override
+	   protected void onCreate(Bundle savedInstanceState) {
+	       super.onCreate(savedInstanceState);
+		   
+		   // ...
+		   
+		   mMeteor = new Meteor("ws://example.meteor.com/websocket");
+		   mMeteor.setCallback(this);
+	   }
+	   
+	   public void onConnect() { }
+	   
+	   public void onDisconnect(int code, String reason) { }
+	   
+	   public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
+	   
+	   public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) { }
+	   
+	   public void onDataRemoved(String collectionName, String documentID) { }
+	   
+	   public void onException(Exception e) { }
+   
+   }
+   ```
+
+ * Inserting data into a collection
+
+   ```
+   Map<String, Object> values = new HashMap<String, Object>();
+   values.put("_id", "my-id");
+   values.put("some-key", "some-value");
+   
+   mMeteor.insert("my-collection", values);
+   ```
+
+ * Updating data in a collection
+
+   ```
+   Map<String, Object> query = new HashMap<String, Object>();
+   query.put("_id", "my-id");
+   
+   Map<String, Object> values = new HashMap<String, Object>();
+   values.put("some-key", "some-value");
+   
+   mMeteor.update("my-collection", query, values);
+   ```
+
+ * Deleting data from a collection
+
+   `mMeteor.remove("my-collection", "my-id");`
+
+ * Subscribing to data from the server
+
+   `String subscriptionId = mMeteor.subscribe("my-subscription");`
+
+ * Unsubscribing from a previously established subscription
+
+   `mMeteor.unsubscribe(subscriptionId);`
+
+ * Calling a custom method defined on the server
+
+   `mMeteor.call("myMethod");`
+
+ * Disconnect from the server
+
+   `mMeteor.disconnect()`
+
+ * Creating a new account (requires `accounts-password` package)
+
+   `mMeteor.registerAndLogin("john", "john.doe@example.com", "password", new ResultListener() { });`
+
+ * Signing in with an existing username (requires `accounts-password` package)
+
+   `mMeteor.loginWithUsername("john", "password", new ResultListener() { });`
+
+ * Signing in with an existing email address (requires `accounts-password` package)
+
+   `mMeteor.loginWithEmail("john.doe@example.com", "password", new ResultListener() { });`
+
+ * Checking whether the client is connected
+
+   `mMeteor.isConnected()`
+
+ * Manually attempt to re-connect (if necessary)
+
+   `mMeteor.reconnect()`
 
 ## Contributing
 
@@ -39,8 +127,6 @@ All contributions are welcome! If you wish to contribute, please create an issue
  * [DDP — Specification](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md)
  * [Jackson — Documentation](http://wiki.fasterxml.com/JacksonDocumentation)
  * [Autobahn|Android — API documentation](http://autobahn.ws/android/_gen/packages.html)
- * [Firebase — Tutorial](https://www.firebase.com/docs/android/guide/)
- * [Firebase — API documentation](https://www.firebase.com/docs/java-api/javadoc/index.html)
 
 ## Disclaimer
 
