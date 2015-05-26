@@ -62,6 +62,7 @@ public class Protocol {
 		public static final String SUBS = "subs";
 		public static final String SUPPORT = "support";
 		public static final String VERSION = "version";
+		public static final String TOKEN = "token";
 
 	}
 

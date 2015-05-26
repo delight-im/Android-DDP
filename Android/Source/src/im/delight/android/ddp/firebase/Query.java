@@ -35,7 +35,7 @@ public class Query {
 	private static final MeteorCallback mClientCallback = new MeteorCallback() {
 
 		@Override
-		public void onConnect() {
+		public void onConnect(final boolean signedInAutomatically) {
 			reportConnectivityChange(true);
 		}
 
@@ -123,7 +123,7 @@ public class Query {
 		}
 		// for the first instance create a shared client
 		if (mClient == null) {
-			mClient = new Meteor(url, DDP_VERSION);
+			mClient = new Meteor(Firebase.getAndroidContext(), url, DDP_VERSION);
 			mClient.setCallback(mClientCallback);
 		}
 

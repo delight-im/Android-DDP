@@ -19,7 +19,7 @@ package im.delight.android.ddp;
 /** Callback for asynchronous events caused by the WebSocket connection or received from the DDP server */
 public interface MeteorCallback {
 
-	public void onConnect();
+	public void onConnect(boolean signedInAutomatically);
 	public void onDisconnect(int code, String reason);
 	public void onDataAdded(String collectionName, String documentID, String newValuesJson);
 	public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson);

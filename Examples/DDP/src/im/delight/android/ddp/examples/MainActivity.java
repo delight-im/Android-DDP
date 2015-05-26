@@ -34,45 +34,50 @@ public class MainActivity extends Activity implements MeteorCallback {
 		setContentView(R.layout.activity_main);
 
 		// create a new instance (protocol version in second parameter is optional)
-		mMeteor = new Meteor("ws://example.meteor.com/websocket");
+		mMeteor = new Meteor(this, "ws://android-ddp-meteor.meteor.com/websocket");
 
 		// register the callback that will handle events and receive messages
 		mMeteor.setCallback(this);
 	}
 
 	@Override
-	public void onConnect() {
+	public void onConnect(final boolean signedInAutomatically) {
 		System.out.println("Connected");
 
-		// sign up for a new account
-		mMeteor.registerAndLogin("john-doe", "john.doe@example.com", "password1", new ResultListener() {
+		if (signedInAutomatically) {
+			System.out.println("Successfully logged in automatically");
+		}
+		else {
+			// sign up for a new account
+			mMeteor.registerAndLogin("john-doe", "john.doe@example.com", "password1", new ResultListener() {
 
-			@Override
-			public void onSuccess(String result) {
-				System.out.println("Successfully registered: "+result);
-			}
+				@Override
+				public void onSuccess(String result) {
+					System.out.println("Successfully registered: "+result);
+				}
 
-			@Override
-			public void onError(String error, String reason, String details) {
-				System.out.println("Could not register: "+error+" / "+reason+" / "+details);
-			}
+				@Override
+				public void onError(String error, String reason, String details) {
+					System.out.println("Could not register: "+error+" / "+reason+" / "+details);
+				}
 
-		});
+			});
 
-		// sign in to the server
-		mMeteor.loginWithUsername("john-doe", "password1", new ResultListener() {
+			// sign in to the server
+			mMeteor.loginWithUsername("john-doe", "password1", new ResultListener() {
 
-			@Override
-			public void onSuccess(String result) {
-				System.out.println("Successfully logged in: "+result);
-			}
+				@Override
+				public void onSuccess(String result) {
+					System.out.println("Successfully logged in: "+result);
+				}
 
-			@Override
-			public void onError(String error, String reason, String details) {
-				System.out.println("Could not log in: "+error+" / "+reason+" / "+details);
-			}
+				@Override
+				public void onError(String error, String reason, String details) {
+					System.out.println("Could not log in: "+error+" / "+reason+" / "+details);
+				}
 
-		});
+			});
+		}
 
 		// subscribe to data from the server
 		String subscriptionId = mMeteor.subscribe("publicMessages");

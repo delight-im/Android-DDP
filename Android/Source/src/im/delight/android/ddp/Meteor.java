@@ -16,6 +16,8 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+import android.content.SharedPreferences;
+import android.content.Context;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Queue;
 import java.util.Iterator;
@@ -50,6 +52,7 @@ public class Meteor {
 	private final Map<String, Listener> mListeners;
 	/** Messages that couldn't be dispatched yet and thus had to be queued */
 	private final Queue<String> mQueuedMessages;
+	private final Context mContext;
 	private String mServerUri;
 	private String mDdpVersion;
 	/** The number of unsuccessful attempts to re-connect in sequence */
@@ -64,10 +67,11 @@ public class Meteor {
 	 *
 	 * The server URI should usually be in the form of `ws://example.meteor.com/websocket`
 	 *
+	 * @param context a `Context` reference (e.g. an `Activity` or `Service` instance)
 	 * @param serverUri the server URI to connect to
 	 */
-	public Meteor(final String serverUri) {
-		this(serverUri, SUPPORTED_DDP_VERSIONS[0]);
+	public Meteor(final Context context, final String serverUri) {
+		this(context, serverUri, SUPPORTED_DDP_VERSIONS[0]);
 	}
 
 	/**
@@ -75,13 +79,21 @@ public class Meteor {
 	 *
 	 * The server URI should usually be in the form of `ws://example.meteor.com/websocket`
 	 *
+	 * @param context a `Context` reference (e.g. an `Activity` or `Service` instance)
 	 * @param serverUri the server URI to connect to
 	 * @param protocolVersion the desired DDP protocol version
 	 */
-	public Meteor(final String serverUri, final String protocolVersion) {
+	public Meteor(final Context context, final String serverUri, final String protocolVersion) {
 		if (!isVersionSupported(protocolVersion)) {
 			throw new RuntimeException("DDP protocol version not supported: "+protocolVersion);
 		}
+
+		if (context == null) {
+			throw new RuntimeException("The context reference may not be null");
+		}
+
+		// save the context reference
+		mContext = context.getApplicationContext();
 
 		// create a new WebSocket connection for the data transfer
 		mConnection = new WebSocketConnection();
@@ -304,14 +316,8 @@ public class Meteor {
 						mSessionID = data.get(Protocol.Field.SESSION).getTextValue();
 					}
 
-					if (mCallback != null) {
-						mCallback.onConnect();
-					}
-
-					// try to dispatch queued messages now
-					for (String queuedMessage : mQueuedMessages) {
-						send(queuedMessage);
-					}
+					// initialize the new session
+					initSession();
 				}
 				else if (message.equals(Protocol.Message.FAILED)) {
 					if (data.has(Protocol.Field.VERSION)) {
@@ -426,6 +432,17 @@ public class Meteor {
 					}
 				}
 				else if (message.equals(Protocol.Message.RESULT)) {
+					// check if we have to process any result data internally
+					if (data.has(Protocol.Field.RESULT)) {
+						final JsonNode resultData = data.get(Protocol.Field.RESULT);
+
+						// if the result contains a login token
+						if (resultData.has(Protocol.Field.TOKEN)) {
+							final String loginToken = resultData.get(Protocol.Field.TOKEN).getTextValue();
+							saveLoginToken(loginToken);
+						}
+					}
+
 					final String id;
 					if (data.has(Protocol.Field.ID)) {
 						id = data.get(Protocol.Field.ID).getTextValue();
@@ -685,6 +702,19 @@ public class Meteor {
 	}
 
 	/**
+	 * Attempts to sign in with the given login token
+	 *
+	 * @param token the login token
+	 * @param listener the listener to call on success/error
+	 */
+	private void loginWithToken(final String token, final ResultListener listener) {
+		final Map<String, Object> authData = new HashMap<String, Object>();
+		authData.put("resume", token);
+
+		call("login", new Object[] { authData }, listener);
+	}
+
+	/**
 	 * Registers a new user with the specified username, email address and password
 	 *
 	 * This method will automatically login as the new user on success
@@ -912,6 +942,80 @@ public class Meteor {
 	 */
 	private static Map<String, Object> emptyMap() {
 		return new HashMap<String, Object>();
+	}
+
+	/**
+	 * Saves the given login token to the preferences
+	 *
+	 * @param token the login token to save
+	 */
+	private void saveLoginToken(final String token) {
+		final SharedPreferences prefs = getSharedPreferences();
+		final SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Preferences.Keys.LOGIN_TOKEN, token);
+		editor.commit();
+	}
+
+	/**
+	 * Retrieves the last login token from the preferences
+	 *
+	 * @return the last login token or `null`
+	 */
+	private String getLoginToken() {
+		return getSharedPreferences().getString(Preferences.Keys.LOGIN_TOKEN, null);
+	}
+
+	/**
+	 * Returns a reference to the preferences for internal use
+	 *
+	 * @return the `SharedPreferences` instance
+	 */
+	private SharedPreferences getSharedPreferences() {
+		return mContext.getSharedPreferences(Preferences.FILE_NAME, Context.MODE_PRIVATE);
+	}
+
+	private void initSession() {
+		// get the last login token
+		final String loginToken = getLoginToken();
+
+		// if we found a login token that might work
+		if (loginToken != null) {
+			// try to sign in with that token
+			loginWithToken(loginToken, new ResultListener() {
+
+				@Override
+				public void onSuccess(final String result) {
+					announceSessionReady(true);
+				}
+
+				@Override
+				public void onError(final String error, final String reason, final String details) {
+					announceSessionReady(false);
+				}
+
+			});
+		}
+		// if we didn't find any login token
+		else {
+			announceSessionReady(false);
+		}
+	}
+
+	/**
+	 * Announces that the new session is now ready to use
+	 *
+	 * @param signedInAutomatically whether we have already signed in automatically (`true`) or not (`false)`
+	 */
+	private void announceSessionReady(final boolean signedInAutomatically) {
+		// run the callback that waits for the connection to open
+		if (mCallback != null) {
+			mCallback.onConnect(signedInAutomatically);
+		}
+
+		// try to dispatch queued messages now
+		for (String queuedMessage : mQueuedMessages) {
+			send(queuedMessage);
+		}
 	}
 
 }

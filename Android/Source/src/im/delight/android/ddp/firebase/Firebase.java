@@ -16,6 +16,7 @@ package im.delight.android.ddp.firebase;
  * limitations under the License.
  */
 
+import android.content.Context;
 import im.delight.android.ddp.firebase.util.Path;
 import im.delight.android.ddp.firebase.util.Utilities;
 import java.util.HashSet;
@@ -60,6 +61,8 @@ public class Firebase extends Query {
 		public void onError(FirebaseError error);
 
 	}
+
+	private static Context mContext;
 
 	/**
 	 * Returns an instance referencing the given location
@@ -361,8 +364,17 @@ public class Firebase extends Query {
 	 *
 	 * @param context the Android context to use
 	 */
-	@SuppressWarnings("unused")
-	public static void setAndroidContext(Object context) { }
+	public static void setAndroidContext(final Context context) {
+		mContext = context.getApplicationContext();
+	}
+
+	protected static Context getAndroidContext() {
+		if (mContext == null) {
+			throw new RuntimeException("Please call `setAndroidContext()` first");
+		}
+
+		return mContext;
+	}
 
 	@Override
 	public String toString() {

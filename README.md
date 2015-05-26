@@ -31,11 +31,11 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 		   
 		   // ...
 		   
-		   mMeteor = new Meteor("ws://example.meteor.com/websocket");
+		   mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
 		   mMeteor.setCallback(this);
 	   }
 	   
-	   public void onConnect() { }
+	   public void onConnect(boolean signedInAutomatically) { }
 	   
 	   public void onDisconnect(int code, String reason) { }
 	   
