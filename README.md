@@ -104,6 +104,14 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
    `mMeteor.loginWithEmail("john.doe@example.com", "password", new ResultListener() { });`
 
+ * Check if the client is currently logged in
+
+   `mMeteor.isLoggedIn()`
+
+ * Get the client's user ID (if currently logged in)
+
+   `mMeteor.getUserId()`
+
  * Logging out
 
    `mMeteor.logout();`

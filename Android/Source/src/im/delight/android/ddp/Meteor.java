@@ -61,6 +61,7 @@ public class Meteor {
 	private MeteorCallback mCallback;
 	private String mSessionID;
 	private boolean mConnected;
+	private String mLoggedInUserId;
 
 	/**
 	 * Returns a new instance for a client connecting to a server via DDP over websocket
@@ -436,10 +437,14 @@ public class Meteor {
 					if (data.has(Protocol.Field.RESULT)) {
 						final JsonNode resultData = data.get(Protocol.Field.RESULT);
 
-						// if the result contains a login token
-						if (resultData.has(Protocol.Field.TOKEN)) {
+						// if the result is from a previous login attempt
+						if (isLoginResult(resultData)) {
+							// extract the login token for subsequent automatic re-login
 							final String loginToken = resultData.get(Protocol.Field.TOKEN).getTextValue();
 							saveLoginToken(loginToken);
+
+							// extract the user's ID
+							mLoggedInUserId = resultData.get(Protocol.Field.ID).getTextValue();
 						}
 					}
 
@@ -520,6 +525,34 @@ public class Meteor {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns whether the given JSON result is from a previous login attempt
+	 *
+	 * @param result the JSON result
+	 * @return whether the result is from a login attempt (`true`) or not (`false`)
+	 */
+	private static boolean isLoginResult(final JsonNode result) {
+		return result.has(Protocol.Field.TOKEN) && result.has(Protocol.Field.ID);
+	}
+
+	/**
+	 * Returns whether the client is currently logged in as some user
+	 *
+	 * @return whether the client is logged in (`true`) or not (`false`)
+	 */
+	public boolean isLoggedIn() {
+		return mLoggedInUserId != null;
+	}
+
+	/**
+	 * Returns the ID of the user who is currently logged in
+	 *
+	 * @return the ID or `null`
+	 */
+	public String getUserId() {
+		return mLoggedInUserId;
 	}
 
 	/**
@@ -723,6 +756,10 @@ public class Meteor {
 
 			@Override
 			public void onSuccess(final String result) {
+				// remember that we're not logged in anymore
+				mLoggedInUserId = null;
+
+				// delete the last login token which is now invalid
 				saveLoginToken(null);
 
 				if (listener != null) {

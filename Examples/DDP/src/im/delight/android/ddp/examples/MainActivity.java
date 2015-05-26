@@ -43,6 +43,8 @@ public class MainActivity extends Activity implements MeteorCallback {
 	@Override
 	public void onConnect(final boolean signedInAutomatically) {
 		System.out.println("Connected");
+		System.out.println("Is logged in: "+mMeteor.isLoggedIn());
+		System.out.println("User ID: "+mMeteor.getUserId());
 
 		if (signedInAutomatically) {
 			System.out.println("Successfully logged in automatically");
@@ -69,6 +71,9 @@ public class MainActivity extends Activity implements MeteorCallback {
 				@Override
 				public void onSuccess(String result) {
 					System.out.println("Successfully logged in: "+result);
+
+					System.out.println("Is logged in: "+mMeteor.isLoggedIn());
+					System.out.println("User ID: "+mMeteor.getUserId());
 				}
 
 				@Override
