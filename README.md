@@ -104,6 +104,10 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
    `mMeteor.loginWithEmail("john.doe@example.com", "password", new ResultListener() { });`
 
+ * Logging out
+
+   `mMeteor.logout();`
+
  * Checking whether the client is connected
 
    `mMeteor.isConnected()`

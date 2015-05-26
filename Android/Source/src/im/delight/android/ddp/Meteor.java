@@ -714,6 +714,32 @@ public class Meteor {
 		call("login", new Object[] { authData }, listener);
 	}
 
+	public void logout() {
+		logout(null);
+	}
+
+	public void logout(final ResultListener listener) {
+		call("logout", new Object[] { }, new ResultListener() {
+
+			@Override
+			public void onSuccess(final String result) {
+				saveLoginToken(null);
+
+				if (listener != null) {
+					listener.onSuccess(result);
+				}
+			}
+
+			@Override
+			public void onError(final String error, final String reason, final String details) {
+				if (listener != null) {
+					listener.onError(error, reason, details);
+				}
+			}
+
+		});
+	}
+
 	/**
 	 * Registers a new user with the specified username, email address and password
 	 *
