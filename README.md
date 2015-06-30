@@ -4,6 +4,16 @@ This library implements the [Distributed Data Protocol](https://www.meteor.com/d
 
 Connect your native Android apps, written in Java, to apps built with the [Meteor](https://www.meteor.com/) framework and build real-time features.
 
+## Motivation
+
+ * Have you built a web application with Meteor?
+   * Using this library, you can build native Android apps that can talk to your Meteor server and web application.
+ * Are you primarily an Android developer (who has never heard of Meteor)?
+   * With "Android-DDP", you can use a Meteor server as your backend for real-time applications on Android.
+ * Doesn't Meteor provide built-in features for Android app development?
+   * With Meteor's built-in features, your Android app will be written in HTML, CSS and JavaScript, wrapped in a `WebView`.
+   * By using this library, however, you can write native Android apps in Java while still using Meteor as your real-time backend.
+
 ## Installation
 
  * Add this library to your project
