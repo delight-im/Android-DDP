@@ -33,6 +33,9 @@ public class MainActivity extends Activity implements MeteorCallback {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// enable logging of internal events for the library
+		Meteor.setLoggingEnabled(true);
+
 		// create a new instance (protocol version in second parameter is optional)
 		mMeteor = new Meteor(this, "ws://android-ddp-meteor.meteor.com/websocket");
 

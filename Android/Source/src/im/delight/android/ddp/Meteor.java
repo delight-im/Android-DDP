@@ -38,8 +38,6 @@ public class Meteor {
 
 	/** Supported versions of the DDP protocol in order of preference */
 	private static final String[] SUPPORTED_DDP_VERSIONS = { "1", "pre2", "pre1" };
-	/** Whether logging should be enabled or not (behaviour can be adjusted in log() method */
-	private static final boolean LOGGING_ENABLED = true;
 	/** The maximum number of attempts to re-connect to the server over WebSocket */
 	private static final int RECONNECT_ATTEMPTS_MAX = 5;
 	/** Instance of Jackson library's ObjectMapper that converts between JSON and Java objects (POJOs) */
@@ -53,6 +51,8 @@ public class Meteor {
 	/** Messages that couldn't be dispatched yet and thus had to be queued */
 	private final Queue<String> mQueuedMessages;
 	private final Context mContext;
+	/** Whether logging should be enabled or not */
+	private static boolean mLoggingEnabled;
 	private String mServerUri;
 	private String mDdpVersion;
 	/** The number of unsuccessful attempts to re-connect in sequence */
@@ -580,12 +580,21 @@ public class Meteor {
 	}
 
 	/**
+	 * Sets whether logging of internal events and data flow should be enabled for this library
+	 *
+	 * @param enabled whether logging should be enabled (`true`) or not (`false`)
+	 */
+	public static void setLoggingEnabled(final boolean enabled) {
+		mLoggingEnabled = enabled;
+	}
+
+	/**
 	 * Logs a message if logging has been enabled
 	 *
 	 * @param message the message to log
 	 */
 	public static void log(final String message) {
-		if (LOGGING_ENABLED) {
+		if (mLoggingEnabled) {
 			System.out.println(message);
 		}
 	}
