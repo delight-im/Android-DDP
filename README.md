@@ -10,8 +10,8 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    * Using this library, you can build native Android apps that can talk to your Meteor server and web application.
  * Are you primarily an Android developer (who has never heard of Meteor)?
    * With "Android-DDP", you can use a Meteor server as your backend for real-time applications on Android.
- * Doesn't Meteor provide built-in features for Android app development?
-   * With Meteor's built-in features, your Android app will be written in HTML, CSS and JavaScript, wrapped in a `WebView`.
+ * Doesn't Meteor provide built-in features for Android app development already?
+   * With Meteor's built-in features, your Android app will be written in HTML, CSS and JavaScript, wrapped in a `WebView`. It will not be a *native* app.
    * By using this library, however, you can write native Android apps in Java while still using Meteor as your real-time backend.
 
 ## Installation
@@ -32,33 +32,64 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
    ```
    public class MyActivity extends Activity implements MeteorCallback {
-   
+
        private Meteor mMeteor;
-   
+
        @Override
 	   protected void onCreate(Bundle savedInstanceState) {
 	       super.onCreate(savedInstanceState);
-		   
+
 		   // ...
-		   
+
 		   mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
 		   mMeteor.setCallback(this);
 	   }
-	   
+
 	   public void onConnect(boolean signedInAutomatically) { }
-	   
+
 	   public void onDisconnect(int code, String reason) { }
-	   
+
 	   public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
-	   
+
 	   public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) { }
-	   
+
 	   public void onDataRemoved(String collectionName, String documentID) { }
-	   
+
 	   public void onException(Exception e) { }
-   
+
    }
    ```
+
+ * Singleton access
+   * Creating an instance at the beginning
+
+     ```
+	 MeteorSingleton.createInstance(this, "ws://example.meteor.com/websocket")
+	 // instead of
+	 // new Meteor(this, "ws://example.meteor.com/websocket")
+	 ```
+
+   * Accessing the instance afterwards (across `Activity` instances)
+
+     ```
+	 MeteorSingleton.getInstance()
+	 // instead of
+	 // mMeteor
+	 ```
+
+   * Registering a callback
+
+     ```
+	 MeteorSingleton.getInstance().setCallback(this);
+	 // instead of
+	 // mMeteor.setCallback(this);
+	 ```
+
+   * Unregistering a callback
+
+     `MeteorSingleton.getInstance().unsetCallback(this);`
+
+   * All other API methods can be called on `MeteorSingleton.getInstance()` just as you would do on any other `Meteor` instance, as documented here with `mMeteor`
 
  * Inserting data into a collection
 
@@ -66,7 +97,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    Map<String, Object> values = new HashMap<String, Object>();
    values.put("_id", "my-id");
    values.put("some-key", "some-value");
-   
+
    mMeteor.insert("my-collection", values);
    ```
 
@@ -75,10 +106,10 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    ```
    Map<String, Object> query = new HashMap<String, Object>();
    query.put("_id", "my-id");
-   
+
    Map<String, Object> values = new HashMap<String, Object>();
    values.put("some-key", "some-value");
-   
+
    mMeteor.update("my-collection", query, values);
    ```
 
@@ -114,15 +145,15 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
    `mMeteor.loginWithEmail("john.doe@example.com", "password", new ResultListener() { });`
 
- * Check if the client is currently logged in
+ * Check if the client is currently logged in (requires `accounts-password` package)
 
    `mMeteor.isLoggedIn()`
 
- * Get the client's user ID (if currently logged in)
+ * Get the client's user ID (if currently logged in) (requires `accounts-password` package)
 
    `mMeteor.getUserId()`
 
- * Logging out
+ * Logging out (requires `accounts-password` package)
 
    `mMeteor.logout();`
 

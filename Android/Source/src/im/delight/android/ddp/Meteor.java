@@ -36,6 +36,7 @@ import de.tavendo.autobahn.WebSocketConnection;
 /** Client that connects to Meteor servers implementing the DDP protocol */
 public class Meteor {
 
+	private static final String TAG = "Meteor";
 	/** Supported versions of the DDP protocol in order of preference */
 	private static final String[] SUPPORTED_DDP_VERSIONS = { "1", "pre2", "pre1" };
 	/** The maximum number of attempts to re-connect to the server over WebSocket */
@@ -58,7 +59,7 @@ public class Meteor {
 	/** The number of unsuccessful attempts to re-connect in sequence */
 	private int mReconnectAttempts;
 	/** The callback that will handle events and receive messages from this client */
-	private MeteorCallback mCallback;
+	protected MeteorCallback mCallback;
 	private String mSessionID;
 	private boolean mConnected;
 	private String mLoggedInUserId;
@@ -104,7 +105,9 @@ public class Meteor {
 
 			@Override
 			public void onOpen() {
-				log("onOpen()");
+				log(TAG);
+				log("  onOpen");
+
 				mConnected = true;
 				mReconnectAttempts = 0;
 				connect(mSessionID);
@@ -112,7 +115,11 @@ public class Meteor {
 
 			@Override
 			public void onClose(int code, String reason) {
-				log("onClose()");
+				log(TAG);
+				log("  onClose");
+				log("    code == "+code);
+				log("    reason == "+reason);
+
 				final boolean lostConnection = mConnected;
 				mConnected = false;
 				if (lostConnection) {
@@ -133,6 +140,9 @@ public class Meteor {
 
 			@Override
 			public void onTextMessage(String payload) {
+				log(TAG);
+				log("  onTextMessage");
+				log("    payload == "+payload);
 				handleMessage(payload);
 			}
 
@@ -242,16 +252,20 @@ public class Meteor {
 	 * @param message the string to send
 	 */
 	private void send(final String message) {
+		log(TAG);
+		log("  send");
+		log("    message == "+message);
+
 		if (message == null) {
 			throw new RuntimeException("You cannot send `null` messages");
 		}
 
 		if (mConnected) {
-			log("SEND: "+message);
+			log("    dispatching");
 			mConnection.sendTextMessage(message);
 		}
 		else {
-			log("QUEUE: "+message);
+			log("    queueing");
 			mQueuedMessages.add(message);
 		}
 	}
@@ -289,9 +303,7 @@ public class Meteor {
 	 * @param payload the JSON payload to process
 	 */
 	private void handleMessage(final String payload) {
-		log("RECEIVE: "+payload);
-
-		JsonNode data;
+		final JsonNode data;
 		try {
 			data = mObjectMapper.readTree(payload);
 		}
