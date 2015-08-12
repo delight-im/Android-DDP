@@ -99,6 +99,8 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    values.put("some-key", "some-value");
 
    mMeteor.insert("my-collection", values);
+   // or
+   // mMeteor.insert("my-collection", values, new ResultListener() { });
    ```
 
  * Updating data in a collection
@@ -111,23 +113,49 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    values.put("some-key", "some-value");
 
    mMeteor.update("my-collection", query, values);
+   // or
+   // mMeteor.update("my-collection", query, values, options);
+   // or
+   // mMeteor.update("my-collection", query, values, options, new ResultListener() { });
    ```
 
  * Deleting data from a collection
 
-   `mMeteor.remove("my-collection", "my-id");`
+   ```
+   mMeteor.remove("my-collection", "my-id");
+   // or
+   // mMeteor.remove("my-collection", "my-id", new ResultListener() { });
+   ```
 
  * Subscribing to data from the server
 
-   `String subscriptionId = mMeteor.subscribe("my-subscription");`
+   ```
+   String subscriptionId = mMeteor.subscribe("my-subscription");
+   // or
+   // String subscriptionId = mMeteor.subscribe("my-subscription", new Object[] { arg1, arg2 });
+   // or
+   // String subscriptionId = mMeteor.subscribe("my-subscription", new Object[] { arg1, arg2 }, new SubscribeListener() { });
+   ```
 
  * Unsubscribing from a previously established subscription
 
-   `mMeteor.unsubscribe(subscriptionId);`
+   ```
+   mMeteor.unsubscribe(subscriptionId);
+   // or
+   // mMeteor.unsubscribe(subscriptionId, new UnsubscribeListener() { });
+   ```
 
  * Calling a custom method defined on the server
 
-   `mMeteor.call("myMethod");`
+   ```
+   mMeteor.call("myMethod");
+   // or
+   // mMeteor.call("myMethod", new Object[] { arg1, arg2 });
+   // or
+   // mMeteor.call("myMethod", new ResultListener() { });
+   // or
+   // mMeteor.call("myMethod", new Object[] { arg1, arg2 }, new ResultListener() { });
+   ```
 
  * Disconnect from the server
 
@@ -135,7 +163,11 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
  * Creating a new account (requires `accounts-password` package)
 
-   `mMeteor.registerAndLogin("john", "john.doe@example.com", "password", new ResultListener() { });`
+   ```
+   mMeteor.registerAndLogin("john", "john.doe@example.com", "password", new ResultListener() { });
+   // or
+   // mMeteor.registerAndLogin("john", "john.doe@example.com", "password", profile, new ResultListener() { });
+   ```
 
  * Signing in with an existing username (requires `accounts-password` package)
 
@@ -155,7 +187,11 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
  * Logging out (requires `accounts-password` package)
 
-   `mMeteor.logout();`
+   ```
+   mMeteor.logout();
+   // or
+   // mMeteor.logout(new ResultListener() { });
+   ```
 
  * Checking whether the client is connected
 
