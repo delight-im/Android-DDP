@@ -1096,6 +1096,11 @@ public class Meteor {
 			mCallback.onConnect(signedInAutomatically);
 		}
 
+		// ensure that the user id is cleared if automatic sign in failed
+		if (!signedInAutomatically) {
+			mLoggedInUserId = null;
+		}
+
 		// try to dispatch queued messages now
 		for (String queuedMessage : mQueuedMessages) {
 			send(queuedMessage);
