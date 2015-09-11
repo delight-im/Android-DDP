@@ -1074,6 +1074,12 @@ public class Meteor {
 
 				@Override
 				public void onError(final String error, final String reason, final String details) {
+					// clear the user ID since automatic sign-in has failed
+					mLoggedInUserId = null;
+
+					// discard the token which turned out to be invalid
+					saveLoginToken(null);
+
 					announceSessionReady(false);
 				}
 
