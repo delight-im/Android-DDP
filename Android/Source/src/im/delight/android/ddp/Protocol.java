@@ -81,7 +81,7 @@ public class Protocol {
 
 		public static Error fromJson(final JsonNode json) {
 			final String error;
-			if (json.has(Protocol.Field.REASON)) {
+			if (json.has(Protocol.Field.ERROR)) {
 				final JsonNode errorJson = json.get(Protocol.Field.ERROR);
 				if (errorJson.isTextual()) {
 					error = errorJson.getTextValue();
