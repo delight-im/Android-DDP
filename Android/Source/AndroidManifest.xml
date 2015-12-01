@@ -3,6 +3,6 @@
     package="im.delight.android.ddp">
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="23" />
     <application />
 </manifest>
