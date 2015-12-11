@@ -1,5 +1,20 @@
 package im.delight.android.ddp;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import android.content.Context;
+
 /**
  * Copyright 2014 www.delight.im <info@delight.im>
  *
@@ -16,22 +31,22 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+/*
+ * modified by: cprakashagr
+ * date: Dec 01, 2015
+ * comments: registerWithGoogle method added for Google Plus Login in Android DDP Android  Client
+ *           Need to override the LoginHandler at calling the remote method login.
+ *           For details, check the "socialAccountsLoginHandler.js" at server package.
+ *           
+ *           registerWithLinkedIn method added for Linked In Login in Android DDP Android Client
+ *           Need to override the LoginHandler at calling the  remote method login.
+ *           For details, check the "socialAccountsLoginHandler.js" at server package.
+ */
+
 import android.content.SharedPreferences;
-import android.content.Context;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.Queue;
-import java.util.Iterator;
-import org.codehaus.jackson.map.ObjectMapper;
-import java.util.UUID;
-import java.util.Arrays;
-import java.io.IOException;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.JsonNode;
-import java.util.HashMap;
-import java.util.Map;
+import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import de.tavendo.autobahn.WebSocketHandler;
-import de.tavendo.autobahn.WebSocketConnection;
 
 /** Client that connects to Meteor servers implementing the DDP protocol */
 public class Meteor {
@@ -207,7 +222,7 @@ public class Meteor {
 	 * @param existingSessionID an existing session ID or `null`
 	 */
 	private void connect(final String existingSessionID) {
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.CONNECT);
 		data.put(Protocol.Field.VERSION, mDdpVersion);
 		data.put(Protocol.Field.SUPPORT, SUPPORTED_DDP_VERSIONS);
@@ -583,7 +598,7 @@ public class Meteor {
 	 * @param id the ID extracted from the `ping` or `null`
 	 */
 	private void sendPong(final String id) {
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.PONG);
 		if (id != null) {
 			data.put(Protocol.Field.ID, id);
@@ -848,6 +863,61 @@ public class Meteor {
 	}
 
 	/**
+	 * Registers a new user with the Google oAuth API
+	 *
+	 * This method will automatically login as the new user on success
+	 *
+	 * Please note that this requires the `accounts-base` package
+	 *
+	 * @param email the email to register with. Must be fetched from the Google oAuth Android API
+	 * @param userId the unique google plus userId. Must be fetched from the  Google oAuth Android API
+	 * @param idToken the idToken from Google oAuth Android API
+	 * @param oAuthToken the oAuthToken from Google oAuth Android API for server side validation
+	 * @param listener the listener to call on success/error
+	 */
+	public void registerWithGoogle(final String email, final String userId, final String idToken, final String oAuthToken,final ResultListener listener) {
+		final boolean googleLoginPlugin = true;
+		
+		Map<String, Object> accountData = new HashMap<String, Object>();
+		accountData.put("email", email);
+		accountData.put("userId", userId);
+		accountData.put("idToken", idToken);
+		accountData.put("oAuthToken", oAuthToken);
+		accountData.put("googleLoginPlugin", googleLoginPlugin);
+		
+		call("login", new Object[] { accountData }, listener);
+	}
+
+	/**
+	 * Registers a new user with the Linked In 
+	 *
+	 * This method will automatically login as the new user on success
+	 *
+	 * Please note that this requires the `accounts-base` package
+	 *
+	 * @param email the email to register with. Must be fetched from the LinkedIn Android API
+	 * @param userId the unique LinkedIn id. Must be fetched from the LinkedIn Android API
+	 * @param firstName the firstName from LinkedIn Android API
+	 * @param lastName the lastName from LinkedIn Android API
+	 * @param listener the listener to call on success/error
+	 * 
+	 * @param more parameters could be added as per your requirements.
+	 */
+	public void registerWithLinkedIn(final String email, final String userId, final String firstName, final String lastName,final ResultListener listener) {
+		final boolean linkedInLoginPlugin = true;
+		
+		Map<String, Object> accountData = new HashMap<String, Object>();
+		accountData.put("email", email);
+		accountData.put("userId", userId);
+		accountData.put("idToken", firstName);
+		accountData.put("oAuthToken", lastName);
+		accountData.put("googleLoginPlugin", linkedInLoginPlugin);
+		
+		call("login", new Object[] { accountData }, listener);
+	}
+
+	
+	/**
 	 * Executes a remote procedure call (any Java objects (POJOs) will be serialized to JSON by the Jackson library)
 	 *
 	 * @param methodName the name of the method to call, e.g. `/someCollection.insert`
@@ -926,7 +996,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.METHOD);
 		data.put(Protocol.Field.METHOD, methodName);
 		data.put(Protocol.Field.ID, callId);
@@ -978,7 +1048,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.SUBSCRIBE);
 		data.put(Protocol.Field.NAME, subscriptionName);
 		data.put(Protocol.Field.ID, subscriptionId);
@@ -1013,7 +1083,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.UNSUBSCRIBE);
 		data.put(Protocol.Field.ID, subscriptionId);
 		send(data);
