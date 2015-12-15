@@ -207,15 +207,14 @@ All contributions are welcome! If you wish to contribute, please create an issue
 
 ## Dependencies
 
- * [Autobahn|Android](http://autobahn.ws/android/gettingstarted.html#add-jars-to-your-project) — [Tavendo](https://github.com/tavendo/AutobahnAndroid) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
- * [Jackson Core](http://autobahn.ws/android/gettingstarted.html#add-jars-to-your-project) — [FasterXML](https://github.com/FasterXML/jackson-core) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
- * [Jackson ObjectMapper](http://autobahn.ws/android/gettingstarted.html#add-jars-to-your-project) — [FasterXML](https://github.com/FasterXML/jackson-core) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+ * [TubeSock](https://github.com/firebase/TubeSock) — [Firebase](https://github.com/firebase) — [MIT License](http://firebase.mit-license.org/)
+ * [Jackson Core](https://github.com/FasterXML/jackson-core) — [FasterXML](https://github.com/FasterXML) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+ * [Jackson ObjectMapper](https://github.com/FasterXML/jackson-databind) — [FasterXML](https://github.com/FasterXML) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ## Further reading
 
  * [DDP — Specification](https://github.com/meteor/meteor/blob/devel/packages/ddp/DDP.md)
  * [Jackson — Documentation](http://wiki.fasterxml.com/JacksonDocumentation)
- * [Autobahn|Android — API documentation](http://autobahn.ws/android/_gen/packages.html)
 
 ## Disclaimer
 
