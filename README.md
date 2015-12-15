@@ -14,6 +14,10 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    * With Meteor's built-in features, your Android app will be written in HTML, CSS and JavaScript, wrapped in a `WebView`. It will not be a *native* app.
    * By using this library, however, you can write native Android apps in Java while still using Meteor as your real-time backend.
 
+## Requirements
+
+ * Android 2.3+
+
 ## Installation
 
  * Add this library to your project
@@ -47,7 +51,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
 	   public void onConnect(boolean signedInAutomatically) { }
 
-	   public void onDisconnect(int code, String reason) { }
+	   public void onDisconnect() { }
 
 	   public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
 
