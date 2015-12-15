@@ -97,15 +97,13 @@ public class MeteorSingleton extends Meteor implements MeteorCallback {
 	}
 
 	@Override
-	public void onDisconnect(final int code, final String reason) {
+	public void onDisconnect() {
 		log(TAG);
 		log("  onDisconnect");
-		log("    code == "+code);
-		log("    reason == "+reason);
 
 		for (MeteorCallback callback : mCallbacks) {
 			if (callback != null) {
-				callback.onDisconnect(code, reason);
+				callback.onDisconnect();
 			}
 		}
 	}

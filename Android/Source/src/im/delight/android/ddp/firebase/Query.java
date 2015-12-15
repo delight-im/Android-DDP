@@ -40,7 +40,7 @@ public class Query {
 		}
 
 		@Override
-		public void onDisconnect(int code, String reason) {
+		public void onDisconnect() {
 			reportConnectivityChange(false);
 		}
 

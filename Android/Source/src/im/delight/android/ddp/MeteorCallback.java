@@ -20,7 +20,7 @@ package im.delight.android.ddp;
 public interface MeteorCallback {
 
 	public void onConnect(boolean signedInAutomatically);
-	public void onDisconnect(int code, String reason);
+	public void onDisconnect();
 	public void onDataAdded(String collectionName, String documentID, String newValuesJson);
 	public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson);
 	public void onDataRemoved(String collectionName, String documentID);
