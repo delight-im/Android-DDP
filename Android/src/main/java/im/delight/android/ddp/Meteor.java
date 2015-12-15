@@ -30,7 +30,7 @@ import org.codehaus.jackson.JsonNode;
 import java.util.HashMap;
 import java.util.Map;
 import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
+import de.tavendo.autobahn.WebSocketConnectionHandler;
 import de.tavendo.autobahn.WebSocketConnection;
 
 /** Client that connects to Meteor servers implementing the DDP protocol */
@@ -46,7 +46,7 @@ public class Meteor {
 	/** The WebSocket connection that will be used for the data transfer */
 	private final WebSocketConnection mConnection;
 	/** The callback that handles messages and events received from the WebSocket connection */
-	private final WebSocketHandler mWebSocketHandler;
+	private final WebSocketConnectionHandler mWebSocketHandler;
 	/** Map that tracks all pending Listener instances */
 	private final Map<String, Listener> mListeners;
 	/** Messages that couldn't be dispatched yet and thus had to be queued */
@@ -101,7 +101,7 @@ public class Meteor {
 		mConnection = new WebSocketConnection();
 
 		// create a new handler that processes the messages and events received from the WebSocket connection
-		mWebSocketHandler = new WebSocketHandler() {
+		mWebSocketHandler = new WebSocketConnectionHandler() {
 
 			@Override
 			public void onOpen() {
