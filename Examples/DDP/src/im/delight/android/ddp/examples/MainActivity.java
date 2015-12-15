@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 	}
 
 	@Override
-	public void onDisconnect(int code, String reason) {
+	public void onDisconnect() {
 		System.out.println("Disconnected");
 	}
 
