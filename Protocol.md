@@ -1,10 +1,10 @@
-# Server
+# Protocol
 
-Meteor code for the Meteor server instance
-
-Because MongoDB is used as the database engine, we have to store all data *flat*, i.e. emulate nested data sets artificially
+The client library communicates with Meteor servers over the [Distributed Data Protocol](https://www.meteor.com/ddp) (DDP).
 
 ## Debugging
+
+### Initialization
 
  1. Run [this online tool](http://software.hixie.ch/utilities/js/websocket/) that you will use to connect to your *local* Meteor instance
  2. Enter the WebSocket URL (and leave the protocol field empty):
@@ -14,6 +14,8 @@ Because MongoDB is used as the database engine, we have to store all data *flat*
  3. Initialize the DDP connection (using an older protocol that does not require `ping`/`pong` events):
 
     `{"msg":"connect","version":"pre1","support":["pre1"]}`
+
+### Exemplary commands
 
  4. Create a new record (document) `users/jane` on the server:
 
