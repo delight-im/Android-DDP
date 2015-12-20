@@ -60,8 +60,8 @@ public class Meteor {
 	private String mDdpVersion;
 	/** The number of unsuccessful attempts to re-connect in sequence */
 	private int mReconnectAttempts;
-	/** The callback that will handle events and receive messages from this client */
-	protected MeteorCallback mCallback;
+	/** The callbacks that will handle events and receive messages from this client */
+	protected CallbackProxy mCallbackProxy = new CallbackProxy();
 	private String mSessionID;
 	private boolean mConnected;
 	private String mLoggedInUserId;
@@ -130,9 +130,7 @@ public class Meteor {
 					}
 				}
 
-				if (mCallback != null) {
-					mCallback.onDisconnect();
-				}
+				mCallbackProxy.onDisconnect();
 			}
 
 			@Override
@@ -152,9 +150,7 @@ public class Meteor {
 
 			@Override
 			public void onError(final WebSocketException e) {
-				if (mCallback != null) {
-					mCallback.onException(e);
-				}
+				mCallbackProxy.onException(e);
 			}
 
 			@Override
@@ -216,9 +212,7 @@ public class Meteor {
 			mWebSocket.connect();
 		}
 		catch (WebSocketException e) {
-			if (mCallback != null) {
-				mCallback.onException(e);
-			}
+			mCallbackProxy.onException(e);
 		}
 	}
 
@@ -243,7 +237,7 @@ public class Meteor {
 		mConnected = false;
 		mListeners.clear();
 		mSessionID = null;
-		mCallback = null;
+		mCallbackProxy.removeCallbacks();
 		try {
 			mWebSocket.close();
 		}
@@ -292,12 +286,21 @@ public class Meteor {
 	}
 
 	/**
-	 * Sets the callback that will handle events and receive messages from this client
+	 * Adds a callback that will handle events and receive messages from this client
 	 *
 	 * @param callback the callback instance
 	 */
 	public void setCallback(MeteorCallback callback) {
-		mCallback = callback;
+		mCallbackProxy.addCallback(callback);
+	}
+
+	/**
+	 * Removes a callback that was to handle events and receive messages from this client
+	 *
+	 * @param callback the callback instance
+	 */
+	public void unsetCallback(MeteorCallback callback) {
+		mCallbackProxy.removeCallback(callback);
 	}
 
 	/**
@@ -311,9 +314,7 @@ public class Meteor {
 			return mObjectMapper.writeValueAsString(obj);
 		}
 		catch (Exception e) {
-			if (mCallback != null) {
-				mCallback.onException(e);
-			}
+			mCallbackProxy.onException(e);
 			return null;
 		}
 	}
@@ -329,15 +330,11 @@ public class Meteor {
 			data = mObjectMapper.readTree(payload);
 		}
 		catch (JsonProcessingException e) {
-			if (mCallback != null) {
-				mCallback.onException(e);
-			}
+			mCallbackProxy.onException(e);
 			return;
 		}
 		catch (IOException e) {
-			if (mCallback != null) {
-				mCallback.onException(e);
-			}
+			mCallbackProxy.onException(e);
 			return;
 		}
 
@@ -406,9 +403,7 @@ public class Meteor {
 						newValuesJson = null;
 					}
 
-					if (mCallback != null) {
-						mCallback.onDataAdded(collectionName, documentID, newValuesJson);
-					}
+					mCallbackProxy.onDataAdded(collectionName, documentID, newValuesJson);
 				}
 				else if (message.equals(Protocol.Message.CHANGED)) {
 					final String documentID;
@@ -443,9 +438,7 @@ public class Meteor {
 						removedValuesJson = null;
 					}
 
-					if (mCallback != null) {
-						mCallback.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);
-					}
+					mCallbackProxy.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);
 				}
 				else if (message.equals(Protocol.Message.REMOVED)) {
 					final String documentID;
@@ -464,9 +457,7 @@ public class Meteor {
 						collectionName = null;
 					}
 
-					if (mCallback != null) {
-						mCallback.onDataRemoved(collectionName, documentID);
-					}
+					mCallbackProxy.onDataRemoved(collectionName, documentID);
 				}
 				else if (message.equals(Protocol.Message.RESULT)) {
 					// check if we have to process any result data internally
@@ -507,10 +498,10 @@ public class Meteor {
 
 						if (data.has(Protocol.Field.ERROR)) {
 							final Protocol.Error error = Protocol.Error.fromJson(data.get(Protocol.Field.ERROR));
-							((ResultListener) listener).onError(error.getError(), error.getReason(), error.getDetails());
+							mCallbackProxy.forResultListener((ResultListener) listener).onError(error.getError(), error.getReason(), error.getDetails());
 						}
 						else {
-							((ResultListener) listener).onSuccess(result);
+							mCallbackProxy.forResultListener((ResultListener) listener).onSuccess(result);
 						}
 					}
 				}
@@ -526,7 +517,7 @@ public class Meteor {
 							if (listener instanceof SubscribeListener) {
 								mListeners.remove(subscriptionId);
 
-								((SubscribeListener) listener).onSuccess();
+								mCallbackProxy.forSubscribeListener((SubscribeListener) listener).onSuccess();
 							}
 						}
 					}
@@ -547,16 +538,16 @@ public class Meteor {
 
 						if (data.has(Protocol.Field.ERROR)) {
 							final Protocol.Error error = Protocol.Error.fromJson(data.get(Protocol.Field.ERROR));
-							((SubscribeListener) listener).onError(error.getError(), error.getReason(), error.getDetails());
+							mCallbackProxy.forSubscribeListener((SubscribeListener) listener).onError(error.getError(), error.getReason(), error.getDetails());
 						}
 						else {
-							((SubscribeListener) listener).onError(null, null, null);
+							mCallbackProxy.forSubscribeListener((SubscribeListener) listener).onError(null, null, null);
 						}
 					}
 					else if (listener instanceof UnsubscribeListener) {
 						mListeners.remove(subscriptionId);
 
-						((UnsubscribeListener) listener).onSuccess();
+						mCallbackProxy.forUnsubscribeListener((UnsubscribeListener) listener).onSuccess();
 					}
 				}
 			}
@@ -808,14 +799,14 @@ public class Meteor {
 				saveLoginToken(null);
 
 				if (listener != null) {
-					listener.onSuccess(result);
+					mCallbackProxy.forResultListener(listener).onSuccess(result);
 				}
 			}
 
 			@Override
 			public void onError(final String error, final String reason, final String details) {
 				if (listener != null) {
-					listener.onError(error, reason, details);
+					mCallbackProxy.forResultListener(listener).onError(error, reason, details);
 				}
 			}
 
@@ -1122,9 +1113,7 @@ public class Meteor {
 	 */
 	private void announceSessionReady(final boolean signedInAutomatically) {
 		// run the callback that waits for the connection to open
-		if (mCallback != null) {
-			mCallback.onConnect(signedInAutomatically);
-		}
+		mCallbackProxy.onConnect(signedInAutomatically);
 
 		// try to dispatch queued messages now
 		for (String queuedMessage : mQueuedMessages) {
