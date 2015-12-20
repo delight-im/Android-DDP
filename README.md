@@ -222,7 +222,7 @@ All contributions are welcome! If you wish to contribute, please create an issue
 
 ## Disclaimer
 
-This project is neither affiliated with nor endorsed by Meteor or Firebase.
+This project is neither affiliated with nor endorsed by Meteor.
 
 ## License
 
