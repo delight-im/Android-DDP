@@ -40,26 +40,26 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
        private Meteor mMeteor;
 
        @Override
-	   protected void onCreate(Bundle savedInstanceState) {
-	       super.onCreate(savedInstanceState);
+       protected void onCreate(Bundle savedInstanceState) {
+           super.onCreate(savedInstanceState);
 
-		   // ...
+           // ...
 
-		   mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
-		   mMeteor.setCallback(this);
-	   }
+           mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
+           mMeteor.setCallback(this);
+       }
 
-	   public void onConnect(boolean signedInAutomatically) { }
+       public void onConnect(boolean signedInAutomatically) { }
 
-	   public void onDisconnect() { }
+       public void onDisconnect() { }
 
-	   public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
+       public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
 
-	   public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) { }
+       public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) { }
 
-	   public void onDataRemoved(String collectionName, String documentID) { }
+       public void onDataRemoved(String collectionName, String documentID) { }
 
-	   public void onException(Exception e) { }
+       public void onException(Exception e) { }
 
    }
    ```
@@ -68,26 +68,26 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    * Creating an instance at the beginning
 
      ```
-	 MeteorSingleton.createInstance(this, "ws://example.meteor.com/websocket")
-	 // instead of
-	 // new Meteor(this, "ws://example.meteor.com/websocket")
-	 ```
+     MeteorSingleton.createInstance(this, "ws://example.meteor.com/websocket")
+     // instead of
+     // new Meteor(this, "ws://example.meteor.com/websocket")
+     ```
 
    * Accessing the instance afterwards (across `Activity` instances)
 
      ```
-	 MeteorSingleton.getInstance()
-	 // instead of
-	 // mMeteor
-	 ```
+     MeteorSingleton.getInstance()
+     // instead of
+     // mMeteor
+     ```
 
    * Registering a callback
 
      ```
-	 MeteorSingleton.getInstance().setCallback(this);
-	 // instead of
-	 // mMeteor.setCallback(this);
-	 ```
+     MeteorSingleton.getInstance().setCallback(this);
+     // instead of
+     // mMeteor.setCallback(this);
+     ```
 
    * Unregistering a callback
 
