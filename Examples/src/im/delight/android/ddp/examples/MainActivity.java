@@ -111,7 +111,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 		mMeteor.remove("my-collection", "my-key");
 
 		// call an arbitrary method
-		mMeteor.call("/my-collection/count");
+		mMeteor.call("myMethod");
 	}
 
 	@Override
