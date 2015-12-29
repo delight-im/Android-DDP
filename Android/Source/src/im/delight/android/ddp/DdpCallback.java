@@ -16,11 +16,11 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
-/** Callback for asynchronous events caused by a WebSocket connection or received from a DDP server */
-public interface MeteorCallback extends DdpCallback {
+/** Callback for the database-related events received from a DDP server */
+public interface DdpCallback {
 
-	public void onConnect(boolean signedInAutomatically);
-	public void onDisconnect();
-	public void onException(Exception e);
+	public void onDataAdded(String collectionName, String documentID, String newValuesJson);
+	public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson);
+	public void onDataRemoved(String collectionName, String documentID);
 
 }
