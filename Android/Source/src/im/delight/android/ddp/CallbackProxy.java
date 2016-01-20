@@ -34,7 +34,7 @@ public class CallbackProxy implements MeteorCallback {
 	}
 
 	public void removeCallback(final MeteorCallback callback) {
-		mCallbacks.add(callback);
+		mCallbacks.remove(callback);
 	}
 
 	public void removeCallbacks() {
