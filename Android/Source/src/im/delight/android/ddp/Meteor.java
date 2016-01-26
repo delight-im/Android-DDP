@@ -16,6 +16,7 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+import im.delight.android.ddp.db.DataStore;
 import java.net.URI;
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -65,6 +66,7 @@ public class Meteor {
 	private String mSessionID;
 	private boolean mConnected;
 	private String mLoggedInUserId;
+	private final DataStore mDataStore;
 
 	/**
 	 * Returns a new instance for a client connecting to a server via DDP over websocket
@@ -75,7 +77,20 @@ public class Meteor {
 	 * @param serverUri the server URI to connect to
 	 */
 	public Meteor(final Context context, final String serverUri) {
-		this(context, serverUri, SUPPORTED_DDP_VERSIONS[0]);
+		this(context, serverUri, (DataStore) null);
+	}
+
+	/**
+	 * Returns a new instance for a client connecting to a server via DDP over websocket
+	 *
+	 * The server URI should usually be in the form of `ws://example.meteor.com/websocket`
+	 *
+	 * @param context a `Context` reference (e.g. an `Activity` or `Service` instance)
+	 * @param serverUri the server URI to connect to
+	 * @param dataStore the data store to write data to
+	 */
+	public Meteor(final Context context, final String serverUri, final DataStore dataStore) {
+		this(context, serverUri, SUPPORTED_DDP_VERSIONS[0], dataStore);
 	}
 
 	/**
@@ -88,6 +103,20 @@ public class Meteor {
 	 * @param protocolVersion the desired DDP protocol version
 	 */
 	public Meteor(final Context context, final String serverUri, final String protocolVersion) {
+		this(context, serverUri, protocolVersion, null);
+	}
+
+	/**
+	 * Returns a new instance for a client connecting to a server via DDP over websocket
+	 *
+	 * The server URI should usually be in the form of `ws://example.meteor.com/websocket`
+	 *
+	 * @param context a `Context` reference (e.g. an `Activity` or `Service` instance)
+	 * @param serverUri the server URI to connect to
+	 * @param protocolVersion the desired DDP protocol version
+	 * @param dataStore the data store to write data to
+	 */
+	public Meteor(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
 		if (!isVersionSupported(protocolVersion)) {
 			throw new RuntimeException("DDP protocol version not supported: "+protocolVersion);
 		}
@@ -98,6 +127,9 @@ public class Meteor {
 
 		// save the context reference
 		mContext = context.getApplicationContext();
+
+		// save the data store reference
+		mDataStore = dataStore;
 
 		// create a new handler that processes the messages and events received from the WebSocket connection
 		mWebSocketEventHandler = new WebSocketEventHandler() {
@@ -315,6 +347,25 @@ public class Meteor {
 		}
 		catch (Exception e) {
 			mCallbackProxy.onException(e);
+
+			return null;
+		}
+	}
+
+	private Fields fromJson(final String json) {
+		try {
+			if (json != null) {
+				final JsonNode jsonNode = mObjectMapper.readTree(json);
+
+				return mObjectMapper.convertValue(jsonNode, Fields.class);
+			}
+			else {
+				return null;
+			}
+		}
+		catch (Exception e) {
+			mCallbackProxy.onException(e);
+
 			return null;
 		}
 	}
@@ -331,10 +382,12 @@ public class Meteor {
 		}
 		catch (JsonProcessingException e) {
 			mCallbackProxy.onException(e);
+
 			return;
 		}
 		catch (IOException e) {
 			mCallbackProxy.onException(e);
+
 			return;
 		}
 
@@ -403,6 +456,10 @@ public class Meteor {
 						newValuesJson = null;
 					}
 
+					if (mDataStore != null) {
+						mDataStore.onDataAdded(collectionName, documentID, fromJson(newValuesJson));
+					}
+
 					mCallbackProxy.onDataAdded(collectionName, documentID, newValuesJson);
 				}
 				else if (message.equals(Protocol.Message.CHANGED)) {
@@ -438,6 +495,10 @@ public class Meteor {
 						removedValuesJson = null;
 					}
 
+					if (mDataStore != null) {
+						mDataStore.onDataChanged(collectionName, documentID, fromJson(updatedValuesJson), fromJson(removedValuesJson));
+					}
+
 					mCallbackProxy.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);
 				}
 				else if (message.equals(Protocol.Message.REMOVED)) {
@@ -455,6 +516,10 @@ public class Meteor {
 					}
 					else {
 						collectionName = null;
+					}
+
+					if (mDataStore != null) {
+						mDataStore.onDataRemoved(collectionName, documentID);
 					}
 
 					mCallbackProxy.onDataRemoved(collectionName, documentID);
@@ -1119,6 +1184,15 @@ public class Meteor {
 		for (String queuedMessage : mQueuedMessages) {
 			send(queuedMessage);
 		}
+	}
+
+	/**
+	 * Returns the data store that was set in the constructor and that contains all data received from the server
+	 *
+	 * @return the data store
+	 */
+	public DataStore getDataStore() {
+		return mDataStore;
 	}
 
 }
