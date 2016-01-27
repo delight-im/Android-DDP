@@ -254,7 +254,7 @@ public class Meteor {
 	 * @param existingSessionID an existing session ID or `null`
 	 */
 	private void connect(final String existingSessionID) {
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.CONNECT);
 		data.put(Protocol.Field.VERSION, mDdpVersion);
 		data.put(Protocol.Field.SUPPORT, SUPPORTED_DDP_VERSIONS);
@@ -663,7 +663,7 @@ public class Meteor {
 	 * @param id the ID extracted from the `ping` or `null`
 	 */
 	private void sendPong(final String id) {
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.PONG);
 		if (id != null) {
 			data.put(Protocol.Field.ID, id);
@@ -1006,7 +1006,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.METHOD);
 		data.put(Protocol.Field.METHOD, methodName);
 		data.put(Protocol.Field.ID, callId);
@@ -1058,7 +1058,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.SUBSCRIBE);
 		data.put(Protocol.Field.NAME, subscriptionName);
 		data.put(Protocol.Field.ID, subscriptionId);
@@ -1093,7 +1093,7 @@ public class Meteor {
 		}
 
 		// send the request
-		final Map<String, Object> data = new HashMap<>();
+		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.UNSUBSCRIBE);
 		data.put(Protocol.Field.ID, subscriptionId);
 		send(data);
