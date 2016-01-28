@@ -21,11 +21,24 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 ## Installation
 
  * Add this library to your project
-   * Include one of the [JARs](Android/JARs) in your `libs` folder
-   * or
-   * Copy the Java package to your project's source folder
-   * or
-   * Create a new library project from this repository and reference it in your project
+   * Declare the Gradle repository in your root `build.gradle`
+
+     ```gradle
+     allprojects {
+         repositories {
+             maven { url "https://jitpack.io" }
+         }
+     }
+     ```
+
+   * Declare the Gradle dependency in your app module's `build.gradle`
+
+     ```gradle
+     dependencies {
+         compile 'com.github.delight-im:Android-DDP:413cd62cb6'
+     }
+     ```
+
  * Add the Internet permission to your app's `AndroidManifest.xml`:
 
     `<uses-permission android:name="android.permission.INTERNET" />`
