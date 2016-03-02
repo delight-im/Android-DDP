@@ -147,8 +147,14 @@ public class MainActivity extends Activity implements MeteorCallback {
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
 		mMeteor.disconnect();
+		mMeteor.removeCallback(this);
+		// or
+		// mMeteor.removeCallbacks();
+
+		// ...
+
+		super.onDestroy();
 	}
 
 }

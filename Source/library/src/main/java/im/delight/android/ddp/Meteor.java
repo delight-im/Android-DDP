@@ -269,7 +269,6 @@ public class Meteor {
 		mConnected = false;
 		mListeners.clear();
 		mSessionID = null;
-		mCallbackProxy.removeCallbacks();
 		try {
 			mWebSocket.close();
 		}
@@ -335,6 +334,11 @@ public class Meteor {
 	 */
 	public void removeCallback(MeteorCallback callback) {
 		mCallbackProxy.removeCallback(callback);
+	}
+
+	/** Removes all callbacks that were to handle events and receive messages from this client */
+	public void removeCallbacks() {
+		mCallbackProxy.removeCallbacks();
 	}
 
 	/**

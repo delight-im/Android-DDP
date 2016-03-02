@@ -74,6 +74,18 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
        public void onException(Exception e) { }
 
+       @Override
+       public void onDestroy() {
+           mMeteor.disconnect();
+           mMeteor.removeCallback(this);
+           // or
+           // mMeteor.removeCallbacks();
+
+           // ...
+
+           super.onDestroy();
+       }
+
    }
    ```
 
@@ -94,19 +106,23 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
      // mMeteor
      ```
 
-   * Registering a callback
-
-     ```
-     MeteorSingleton.getInstance().addCallback(this);
-     // instead of
-     // mMeteor.addCallback(this);
-     ```
-
-   * Unregistering a callback
-
-     `MeteorSingleton.getInstance().removeCallback(this);`
-
    * All other API methods can be called on `MeteorSingleton.getInstance()` just as you would do on any other `Meteor` instance, as documented here with `mMeteor`
+
+ * Registering a callback
+
+   ```
+   // MeteorCallback callback;
+   mMeteor.addCallback(callback);
+   ```
+
+ * Unregistering a callback
+
+   ```
+   mMeteor.removeCallbacks();
+   // or
+   // // MeteorCallback callback;
+   // mMeteor.removeCallback(callback);
+   ```
 
  * Inserting data into a collection
 
