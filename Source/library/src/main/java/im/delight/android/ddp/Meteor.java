@@ -273,7 +273,9 @@ public class Meteor {
 		try {
 			mWebSocket.close();
 		}
-		catch (Exception e) { }
+		catch (Exception e) {
+			mCallbackProxy.onException(e);
+		}
 	}
 
 	/**
