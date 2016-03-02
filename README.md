@@ -59,7 +59,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
            // ...
 
            mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
-           mMeteor.setCallback(this);
+           mMeteor.addCallback(this);
        }
 
        public void onConnect(boolean signedInAutomatically) { }
@@ -97,9 +97,9 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    * Registering a callback
 
      ```
-     MeteorSingleton.getInstance().setCallback(this);
+     MeteorSingleton.getInstance().addCallback(this);
      // instead of
-     // mMeteor.setCallback(this);
+     // mMeteor.addCallback(this);
      ```
 
    * Unregistering a callback

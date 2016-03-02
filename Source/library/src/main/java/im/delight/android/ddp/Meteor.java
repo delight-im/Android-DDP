@@ -324,7 +324,7 @@ public class Meteor {
 	 *
 	 * @param callback the callback instance
 	 */
-	public void setCallback(MeteorCallback callback) {
+	public void addCallback(MeteorCallback callback) {
 		mCallbackProxy.addCallback(callback);
 	}
 

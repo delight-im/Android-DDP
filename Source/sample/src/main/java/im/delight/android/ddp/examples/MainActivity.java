@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 		mMeteor = new Meteor(this, "ws://android-ddp-meteor.meteor.com/websocket");
 
 		// register the callback that will handle events and receive messages
-		mMeteor.setCallback(this);
+		mMeteor.addCallback(this);
 	}
 
 	@Override
