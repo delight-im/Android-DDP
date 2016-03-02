@@ -62,7 +62,7 @@ public class Meteor {
 	/** The number of unsuccessful attempts to re-connect in sequence */
 	private int mReconnectAttempts;
 	/** The callbacks that will handle events and receive messages from this client */
-	protected CallbackProxy mCallbackProxy = new CallbackProxy();
+	protected final CallbackProxy mCallbackProxy = new CallbackProxy();
 	private String mSessionID;
 	private boolean mConnected;
 	private String mLoggedInUserId;
@@ -331,7 +331,7 @@ public class Meteor {
 	 *
 	 * @param callback the callback instance
 	 */
-	public void unsetCallback(MeteorCallback callback) {
+	public void removeCallback(MeteorCallback callback) {
 		mCallbackProxy.removeCallback(callback);
 	}
 

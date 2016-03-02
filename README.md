@@ -104,7 +104,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
    * Unregistering a callback
 
-     `MeteorSingleton.getInstance().unsetCallback(this);`
+     `MeteorSingleton.getInstance().removeCallback(this);`
 
    * All other API methods can be called on `MeteorSingleton.getInstance()` just as you would do on any other `Meteor` instance, as documented here with `mMeteor`
 
