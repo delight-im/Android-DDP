@@ -1119,7 +1119,7 @@ public class Meteor {
 		final SharedPreferences prefs = getSharedPreferences();
 		final SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Preferences.Keys.LOGIN_TOKEN, token);
-		editor.commit();
+		editor.apply();
 	}
 
 	/**
