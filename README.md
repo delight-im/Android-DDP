@@ -58,8 +58,14 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
            // ...
 
+           // create a new instance
            mMeteor = new Meteor(this, "ws://example.meteor.com/websocket");
+
+           // register the callback that will handle events and receive messages
            mMeteor.addCallback(this);
+
+           // establish the connection
+           mMeteor.connect();
        }
 
        public void onConnect(boolean signedInAutomatically) { }

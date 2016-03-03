@@ -36,11 +36,14 @@ public class MainActivity extends Activity implements MeteorCallback {
 		// enable logging of internal events for the library
 		Meteor.setLoggingEnabled(true);
 
-		// create a new instance (protocol version in second parameter is optional)
+		// create a new instance
 		mMeteor = new Meteor(this, "ws://android-ddp-meteor.meteor.com/websocket");
 
 		// register the callback that will handle events and receive messages
 		mMeteor.addCallback(this);
+
+		// establish the connection
+		mMeteor.connect();
 	}
 
 	@Override

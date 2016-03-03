@@ -141,7 +141,7 @@ public class Meteor {
 
 				mConnected = true;
 				mReconnectAttempts = 0;
-				connect(mSessionID);
+				initConnection(mSessionID);
 			}
 
 			@Override
@@ -202,8 +202,10 @@ public class Meteor {
 		mDdpVersion = protocolVersion;
 		// count the number of failed attempts to re-connect
 		mReconnectAttempts = 0;
+	}
 
-		// create initial connection
+	/** Attempts to establish the connection to the server */
+	public void connect() {
 		openConnection(false);
 	}
 
@@ -229,7 +231,7 @@ public class Meteor {
 	private void openConnection(final boolean isReconnect) {
 		if (isReconnect) {
 			if (mConnected) {
-				connect(mSessionID);
+				initConnection(mSessionID);
 				return;
 			}
 		}
@@ -253,7 +255,7 @@ public class Meteor {
 	 *
 	 * @param existingSessionID an existing session ID or `null`
 	 */
-	private void connect(final String existingSessionID) {
+	private void initConnection(final String existingSessionID) {
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.CONNECT);
 		data.put(Protocol.Field.VERSION, mDdpVersion);
@@ -269,11 +271,17 @@ public class Meteor {
 		mConnected = false;
 		mListeners.clear();
 		mSessionID = null;
-		try {
-			mWebSocket.close();
+
+		if (mWebSocket != null) {
+			try {
+				mWebSocket.close();
+			}
+			catch (Exception e) {
+				mCallbackProxy.onException(e);
+			}
 		}
-		catch (Exception e) {
-			mCallbackProxy.onException(e);
+		else {
+			throw new RuntimeException("You must have called the 'connect' method before you can disconnect again");
 		}
 	}
 
@@ -310,7 +318,13 @@ public class Meteor {
 
 		if (mConnected) {
 			log("    dispatching");
-			mWebSocket.send(message);
+
+			if (mWebSocket != null) {
+				mWebSocket.send(message);
+			}
+			else {
+				throw new RuntimeException("You must have called the 'connect' method before you can send data");
+			}
 		}
 		else {
 			log("    queueing");
