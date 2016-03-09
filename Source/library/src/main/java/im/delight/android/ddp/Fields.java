@@ -16,6 +16,7 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+import java.util.HashMap;
 import java.util.Map;
 
-public interface Fields extends Map<String, Object> { }
+public class Fields extends HashMap<String, Object> implements Map<String, Object> { }
