@@ -119,11 +119,11 @@ public class Meteor {
 	 */
 	public Meteor(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
 		if (!isVersionSupported(protocolVersion)) {
-			throw new RuntimeException("DDP protocol version not supported: "+protocolVersion);
+			throw new IllegalArgumentException("DDP protocol version not supported: "+protocolVersion);
 		}
 
 		if (context == null) {
-			throw new RuntimeException("The context reference may not be null");
+			throw new IllegalArgumentException("The context reference may not be null");
 		}
 
 		// save the context reference
@@ -282,7 +282,7 @@ public class Meteor {
 			}
 		}
 		else {
-			throw new RuntimeException("You must have called the 'connect' method before you can disconnect again");
+			throw new IllegalStateException("You must have called the 'connect' method before you can disconnect again");
 		}
 	}
 
@@ -296,7 +296,7 @@ public class Meteor {
 		final String jsonStr = toJson(obj);
 
 		if (jsonStr == null) {
-			throw new RuntimeException("Object would be serialized to `null`");
+			throw new IllegalArgumentException("Object would be serialized to `null`");
 		}
 
 		// send the JSON string
@@ -314,7 +314,7 @@ public class Meteor {
 		log("    message == "+message);
 
 		if (message == null) {
-			throw new RuntimeException("You cannot send `null` messages");
+			throw new IllegalArgumentException("You cannot send `null` messages");
 		}
 
 		if (mConnected) {
@@ -324,7 +324,7 @@ public class Meteor {
 				mWebSocket.send(message);
 			}
 			else {
-				throw new RuntimeException("You must have called the 'connect' method before you can send data");
+				throw new IllegalStateException("You must have called the 'connect' method before you can send data");
 			}
 		}
 		else {
@@ -846,7 +846,7 @@ public class Meteor {
 			userData.put("email", email);
 		}
 		else {
-			throw new RuntimeException("You must provide either a username or an email address");
+			throw new IllegalArgumentException("You must provide either a username or an email address");
 		}
 
 		final Map<String, Object> authData = new HashMap<String, Object>();
@@ -930,7 +930,7 @@ public class Meteor {
 	 */
 	public void registerAndLogin(final String username, final String email, final String password, final HashMap<String, Object> profile, final ResultListener listener) {
 		if (username == null && email == null) {
-			throw new RuntimeException("You must provide either a username or an email address");
+			throw new IllegalArgumentException("You must provide either a username or an email address");
 		}
 
 		final Map<String, Object> accountData = new HashMap<String, Object>();
