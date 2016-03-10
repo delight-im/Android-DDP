@@ -160,4 +160,92 @@ public class MainActivity extends Activity implements MeteorCallback {
 		super.onDestroy();
 	}
 
+	/*private void testDatabase() {
+		// first Meteor#handleMessage has to be made public temporarily
+
+		// mock some data that is being added
+		mMeteor.handleMessage("{\"msg\":\"added\",\"collection\":\"people\",\"id\":\"al\",\"fields\":{\"name\":\"Alice\",\"age\":25,\"gender\":\"f\",\"location\":{\"country\":\"Japan\",\"region\":\"Kansai\"}}}");
+		mMeteor.handleMessage("{\"msg\":\"added\",\"collection\":\"people\",\"id\":\"bo\",\"fields\":{\"name\":\"Bob\",\"age\":27,\"gender\":\"m\",\"location\":{\"country\":\"Spain\",\"region\":\"Andalusia\"}}}");
+		mMeteor.handleMessage("{\"msg\":\"added\",\"collection\":\"people\",\"id\":\"ca\",\"fields\":{\"name\":\"Carol\",\"age\":29,\"gender\":null,\"location\":null}}");
+		mMeteor.handleMessage("{\"msg\":\"added\",\"collection\":\"people\",\"id\":\"ev\",\"fields\":{\"name\":\"Eve\",\"age\":31,\"gender\":\"f\",\"location\":{\"country\":\"Australia\",\"region\":null}}}");
+
+		// mock some data that is being changed
+		mMeteor.handleMessage("{\"msg\":\"changed\",\"collection\":\"people\",\"id\":\"ev\",\"fields\":{\"age\":23,\"location\":{\"region\":\"New South Wales\"}},\"cleared\":{\"gender\":null}}");
+
+		// mock some data that is being removed
+		mMeteor.handleMessage("{\"msg\":\"removed\",\"collection\":\"people\",\"id\":\"ca\"}");
+
+		// get a reference to the database
+		final Database database = mMeteor.getDatabase();
+
+		// wait a second
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// and then check what's in there
+
+				// test the database operations
+				System.out.println("Database#count() = " + database.count());
+				System.out.println("Database#getCollectionNames() = " + Arrays.toString(database.getCollectionNames()));
+				System.out.println("Database#getCollection(\"customers\") = " + database.getCollection("customers"));
+				System.out.println("Database#getCollection(\"customers\").count() = " + database.getCollection("customers").count());
+				System.out.println("Database#getCollection(\"people\") = " + database.getCollection("people"));
+
+				// print a divider
+				System.out.println("----------");
+
+				// get a reference to a collection
+				final Collection collection = database.getCollection("people");
+
+				// test the collection operations
+				System.out.println("Collection#getName() = " + collection.getName());
+				System.out.println("Collection#count() = " + collection.count());
+				System.out.println("Collection#getDocumentIds() = " + Arrays.toString(collection.getDocumentIds()));
+				System.out.println("Collection#getDocument(\"jo\") = " + collection.getDocument("jo"));
+				System.out.println("Collection#getDocument(\"al\") = " + collection.getDocument("al"));
+				System.out.println("Collection#getDocument(\"ca\") = " + collection.getDocument("ca"));
+				System.out.println("Collection#getDocument(\"ev\") = " + collection.getDocument("ev"));
+
+				// print a divider
+				System.out.println("----------");
+
+				// get a reference to a document
+				final Document document = collection.getDocument("al");
+
+				// test the document operations
+				System.out.println("Document#getId() = " + document.getId());
+				System.out.println("Document#count() = " + document.count());
+				System.out.println("Document#getFieldNames() = " + Arrays.toString(document.getFieldNames()));
+				System.out.println("Document#getField(\"age\") = " + document.getField("age"));
+
+				// print a divider
+				System.out.println("----------");
+
+				// test the query builder operations
+				System.out.println("Collection#findOne() = " + collection.findOne());
+				System.out.println("Collection#find(1) = " + Arrays.toString(collection.find(1)));
+				System.out.println("Collection#find(2) = " + Arrays.toString(collection.find(2)));
+				System.out.println("Collection#find(5) = " + Arrays.toString(collection.find(5)));
+				System.out.println("Collection#find(1, 1) = " + Arrays.toString(collection.find(1, 1)));
+				System.out.println("Collection#find(1, 2) = " + Arrays.toString(collection.find(1, 2)));
+				System.out.println("Collection#find(2, 1) = " + Arrays.toString(collection.find(2, 1)));
+				System.out.println("Collection#find(2, 2) = " + Arrays.toString(collection.find(2, 2)));
+				System.out.println("Collection#find() = " + Arrays.toString(collection.find()));
+				System.out.println("Collection#whereEqual(\"name\", \"Eve\").find() = " + Arrays.toString(collection.whereEqual("name", "Eve").find()));
+				System.out.println("Collection#whereNotEqual(\"name\", \"Eve\").find() = " + Arrays.toString(collection.whereNotEqual("name", "Eve").find()));
+				System.out.println("Collection#whereLessThan(\"age\", 27).find() = " + Arrays.toString(collection.whereLessThan("age", 27).find()));
+				System.out.println("Collection#whereLessThanOrEqual(\"age\", 27).find() = " + Arrays.toString(collection.whereLessThanOrEqual("age", 27).find()));
+				System.out.println("Collection#whereLessThan(\"age\", 25).find() = " + Arrays.toString(collection.whereLessThan("age", 25).find()));
+				System.out.println("Collection#whereGreaterThan(\"age\", 23).find() = " + Arrays.toString(collection.whereGreaterThan("age", 23).find()));
+				System.out.println("Collection#whereGreaterThanOrEqual(\"age\", 23).find() = " + Arrays.toString(collection.whereGreaterThanOrEqual("age", 23).find()));
+				System.out.println("Collection#whereGreaterThan(\"age\", 25).find() = " + Arrays.toString(collection.whereGreaterThan("age", 25).find()));
+				System.out.println("Collection#whereNull(\"location\").find() = " + Arrays.toString(collection.whereNull("location").find()));
+				System.out.println("Collection#whereNotNull(\"location\").find() = " + Arrays.toString(collection.whereNotNull("location").find()));
+				System.out.println("Collection#whereNotNull(\"gender\").whereLessThan(\"age\", 26).find() = " + Arrays.toString(collection.whereNotNull("gender").whereLessThan("age", 26).find()));
+			}
+
+		}, 1000);
+	}*/
+
 }
