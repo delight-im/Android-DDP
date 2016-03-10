@@ -16,11 +16,34 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
-/** Callback for the database-related events received from a DDP server */
+/** Callbacks for all database-related events received from a DDP server */
 public interface DdpCallback {
 
-	public void onDataAdded(String collectionName, String documentID, String newValuesJson);
-	public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson);
-	public void onDataRemoved(String collectionName, String documentID);
+	/**
+	 * Callback that is executed whenever a new document is added to a collection
+	 *
+	 * @param collectionName the name of the collection that the document is added to
+	 * @param documentID the ID of the document that is being added
+	 * @param newValuesJson the new fields of the document as a JSON string
+	 */
+	void onDataAdded(String collectionName, String documentID, String newValuesJson);
+
+	/**
+	 * Callback that is executed whenever an existing document is changed in a collection
+	 *
+	 * @param collectionName the name of the collection that the document is changed in
+	 * @param documentID the ID of the document that is being changed
+	 * @param updatedValuesJson the modified fields of the document as a JSON string
+	 * @param removedValuesJson the deleted fields of the document as a JSON string
+	 */
+	void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson);
+
+	/**
+	 * Callback that is executed whenever an existing document is removed from a collection
+	 *
+	 * @param collectionName the name of the collection that the document is removed from
+	 * @param documentID the ID of the document that is being removed
+	 */
+	void onDataRemoved(String collectionName, String documentID);
 
 }
