@@ -19,8 +19,10 @@ package im.delight.android.ddp;
 /** Callback for asynchronous events caused by a WebSocket connection or received from a DDP server */
 public interface MeteorCallback extends DdpCallback {
 
-	public void onConnect(boolean signedInAutomatically);
-	public void onDisconnect();
-	public void onException(Exception e);
+	void onConnect(boolean signedInAutomatically);
+
+	void onDisconnect();
+
+	void onException(Exception e);
 
 }
