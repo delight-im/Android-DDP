@@ -18,7 +18,8 @@ package im.delight.android.ddp;
 
 public interface SubscribeListener extends Listener {
 
-	public void onSuccess();
-	public void onError(String error, String reason, String details);
+	void onSuccess();
+
+	void onError(String error, String reason, String details);
 
 }
