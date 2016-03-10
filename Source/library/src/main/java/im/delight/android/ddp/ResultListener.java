@@ -18,7 +18,8 @@ package im.delight.android.ddp;
 
 public interface ResultListener extends Listener {
 
-	public void onSuccess(String result);
-	public void onError(String error, String reason, String details);
+	void onSuccess(String result);
+
+	void onError(String error, String reason, String details);
 
 }
