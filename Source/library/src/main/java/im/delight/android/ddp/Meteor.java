@@ -17,6 +17,7 @@ package im.delight.android.ddp;
  */
 
 import im.delight.android.ddp.db.DataStore;
+import im.delight.android.ddp.db.Database;
 import java.net.URI;
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -1209,10 +1210,24 @@ public class Meteor {
 	/**
 	 * Returns the data store that was set in the constructor and that contains all data received from the server
 	 *
-	 * @return the data store
+	 * @return the data store or `null`
 	 */
 	public DataStore getDataStore() {
 		return mDataStore;
+	}
+
+	/**
+	 * Returns the database that was set in the constructor and that contains all data received from the server
+	 *
+	 * @return the database or `null`
+	 */
+	public Database getDatabase() {
+		if (mDataStore instanceof Database) {
+			return (Database) mDataStore;
+		}
+		else {
+			return null;
+		}
 	}
 
 }
