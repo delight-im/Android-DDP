@@ -90,7 +90,7 @@ public class Protocol {
 					error = errorJson.getNumberValue().toString();
 				}
 				else {
-					throw new RuntimeException("Unexpected data type of error.error");
+					throw new IllegalArgumentException("Unexpected data type of error.error");
 				}
 			}
 			else {
