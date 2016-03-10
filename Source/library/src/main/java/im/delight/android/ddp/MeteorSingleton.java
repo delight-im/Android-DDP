@@ -17,7 +17,6 @@ package im.delight.android.ddp;
  */
 
 import android.content.Context;
-import im.delight.android.ddp.Meteor;
 
 /** Provides a single access point to the `Meteor` class that can be used across `Activity` instances */
 public class MeteorSingleton extends Meteor {
@@ -30,7 +29,7 @@ public class MeteorSingleton extends Meteor {
 
 	public synchronized static MeteorSingleton createInstance(final Context context, final String serverUri, final String protocolVersion) {
 		if (mInstance != null) {
-			throw new RuntimeException("An instance has already been created");
+			throw new IllegalStateException("An instance has already been created");
 		}
 
 		if (protocolVersion == null) {
@@ -45,7 +44,7 @@ public class MeteorSingleton extends Meteor {
 
 	public synchronized static MeteorSingleton getInstance() {
 		if (mInstance == null) {
-			throw new RuntimeException("Please call `createInstance(...)` first");
+			throw new IllegalStateException("Please call `createInstance(...)` first");
 		}
 
 		return mInstance;
