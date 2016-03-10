@@ -23,7 +23,11 @@ public class MongoDb {
 	public static class Field {
 
 		public static final String ID = "_id";
+
+		@Deprecated
 		public static final String VALUE = "_value";
+
+		@Deprecated
 		public static final String PRIORITY = "_priority";
 
 	}
@@ -31,6 +35,7 @@ public class MongoDb {
 	/** Constants defining modifiers that can be used in requests */
 	public static class Modifier {
 
+		@Deprecated
 		public static final String SET = "$set";
 
 	}
@@ -38,6 +43,7 @@ public class MongoDb {
 	/** Constants definining options that may be sent along with requests */
 	public static class Option {
 
+		@Deprecated
 		public static final String UPSERT = "upsert";
 
 	}
