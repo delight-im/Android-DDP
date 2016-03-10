@@ -21,8 +21,31 @@ import im.delight.android.ddp.Fields;
 /** Storage for data that exposes write access */
 public interface DataStore {
 
+	/**
+	 * Receives data whenever a new document is added to a collection
+	 *
+	 * @param collectionName the name of the collection that the document is added to
+	 * @param documentID the ID of the document that is being added
+	 * @param newValues the new fields of the document
+	 */
 	void onDataAdded(String collectionName, String documentID, Fields newValues);
+
+	/**
+	 * Receives data whenever an existing document is changed in a collection
+	 *
+	 * @param collectionName the name of the collection that the document is changed in
+	 * @param documentID the ID of the document that is being changed
+	 * @param updatedValues the modified fields of the document
+	 * @param removedValues the deleted fields of the document
+	 */
 	void onDataChanged(String collectionName, String documentID, Fields updatedValues, Fields removedValues);
+
+	/**
+	 * Receives data whenever an existing document is removed from a collection
+	 *
+	 * @param collectionName the name of the collection that the document is removed from
+	 * @param documentID the ID of the document that is being removed
+	 */
 	void onDataRemoved(String collectionName, String documentID);
 
 }
