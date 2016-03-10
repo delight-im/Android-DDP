@@ -18,6 +18,6 @@ package im.delight.android.ddp;
 
 public interface UnsubscribeListener extends Listener {
 
-	public void onSuccess();
+	void onSuccess();
 
 }
