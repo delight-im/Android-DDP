@@ -16,17 +16,11 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 	}
-
-	packagingOptions {
-		exclude 'META-INF/LICENSE'
-		exclude 'META-INF/NOTICE'
-		exclude 'META-INF/ASL2.0'
-	}
 }
 
 dependencies {
-	compile files('libs/jackson-core-asl-1.9.7.jar')
-	compile files('libs/jackson-mapper-asl-1.9.7.jar')
+	compile 'org.codehaus.jackson:jackson-core-asl:1.9.7'
+	compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.7'
 	compile files('libs/tubesock-0.0.13-SNAPSHOT.jar')
 }
 
