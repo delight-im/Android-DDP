@@ -74,11 +74,23 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
        public void onDisconnect() { }
 
-       public void onDataAdded(String collectionName, String documentID, String newValuesJson) { }
+       public void onDataAdded(String collectionName, String documentID, String newValuesJson) {
+           // parse the JSON and manage the data yourself (not recommended)
+           // or
+           // enable a database (see section "Using databases to manage data") (recommended)
+       }
 
-       public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) { }
+       public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) {
+           // parse the JSON and manage the data yourself (not recommended)
+           // or
+           // enable a database (see section "Using databases to manage data") (recommended)
+       }
 
-       public void onDataRemoved(String collectionName, String documentID) { }
+       public void onDataRemoved(String collectionName, String documentID) {
+           // parse the JSON and manage the data yourself (not recommended)
+           // or
+           // enable a database (see section "Using databases to manage data") (recommended)
+       }
 
        public void onException(Exception e) { }
 
@@ -255,6 +267,162 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    ```java
    mMeteor.reconnect();
    ```
+
+## Using databases to manage data
+
+### Enabling a database
+
+Pass an instance of `Database` to the constructor. Right now, the only subclass provided as a built-in database is `InMemoryDatabase`. So the code for the constructor becomes:
+
+```java
+mMeteor = new Meteor(this, "ws://example.meteor.com/websocket", new InMemoryDatabase());
+```
+
+After that change, all data received from the server will automatically be parsed, updated and managed for you in the built-in database. That means no manual JSON parsing!
+
+So whenever you receive data notifications via `onDataAdded`, `onDataChanged` or `onDataRemoved`, that data has already been merged into the database and can be retrieved from there. In these callbacks, you can thus ignore the parameters containing JSON data and instead get the data from your database.
+
+### Accessing the database
+
+```java
+Database database = mMeteor.getDatabase();
+```
+
+This method call and most of the following method calls can be chained for simplicity.
+
+### Getting a collection from the database by name
+
+```java
+// String collectionName = "myCollection";
+Collection collection = mMeteor.getDatabase().getCollection(collectionName);
+```
+
+### Retrieving the names of all collections from the database
+
+```java
+String[] collectionNames = mMeteor.getDatabase().getCollectionNames();
+```
+
+### Fetching the number of collections from the database
+
+```java
+int numCollections = mMeteor.getDatabase().count();
+```
+
+### Getting a document from a collection by ID
+
+```java
+// String documentId = "wjQvNQ6sGjzLMDyiJ";
+Document document = mMeteor.getDatabase().getCollection(collectionName).getDocument(documentId);
+```
+
+### Retrieving the IDs of all documents from a collection
+
+```java
+String[] documentIds = mMeteor.getDatabase().getCollection(collectionName).getDocumentIds();
+```
+
+### Fetching the number of documents from a collection
+
+```java
+int numDocuments = mMeteor.getDatabase().getCollection(collectionName).count();
+```
+
+### Querying a collection for documents
+
+Any of the following method calls can be chained and combined in any way to select documents via complex queries.
+
+```java
+// String fieldName = "age";
+// int fieldValue = 62;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereEqual(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "active";
+// int fieldValue = false;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereNotEqual(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "accountBalance";
+// float fieldValue = 100000.00f;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereLessThan(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "numChildren";
+// long fieldValue = 3L;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereLessThanOrEqual(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "revenue";
+// double fieldValue = 0.00;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereGreaterThan(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "age";
+// int fieldValue = 21;
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereGreaterThanOrEqual(fieldName, fieldValue);
+```
+
+```java
+// String fieldName = "address";
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereNull(fieldName);
+```
+
+```java
+// String fieldName = "modifiedAt";
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereNotNull(fieldName);
+```
+
+Any query can be executed by a `find` or `findOne` call. The step of first creating the `Query` instance can be skipped if you chain the calls to execute the query immediately.
+
+```java
+Document[] documents = mMeteor.getDatabase().getCollection(collectionName).find();
+```
+
+```java
+// int limit = 30;
+Document[] documents = mMeteor.getDatabase().getCollection(collectionName).find(limit);
+```
+
+```java
+// int limit = 30;
+// int offset = 5;
+Document[] documents = mMeteor.getDatabase().getCollection(collectionName).find(limit, offset);
+```
+
+```java
+Document document = mMeteor.getDatabase().getCollection(collectionName).findOne();
+```
+
+Chained together, these calls may look as follows, for example:
+
+```java
+Document document = mMeteor.getDatabase().getCollection("users").whereNotNull("lastLoginAt").whereGreaterThan("level", 3).findOne();
+```
+
+### Getting a field from a document by name
+
+```java
+// String fieldName = "age";
+Object field = mMeteor.getDatabase().getCollection(collectionName).getDocument(documentId).getField(fieldName);
+```
+
+### Retrieving the names of all fields from a document
+
+```java
+String[] fieldNames = mMeteor.getDatabase().getCollection(collectionName).getDocument(documentId).getFieldNames();
+```
+
+### Fetching the number of fields from a document
+
+```java
+int numFields = mMeteor.getDatabase().getCollection(collectionName).getDocument(documentId).count();
+```
 
 ## Contributing
 
