@@ -43,9 +43,8 @@ The client library communicates with Meteor servers over the [Distributed Data P
 
 ### Verifying against a Meteor client app written in JavaScript
 
- * In order to look up the contents of any collection, execute the following JavaScript call on the console:
-
-   ```javascript
-   // var MyCollection = new Meteor.Collection("myCollection");
-   JSON.stringify(MyCollection._collection._docs._map);
-   ```
+ 1. In your web browser, open a website built with Meteor, such as the [official Meteor website](https://www.meteor.com/) itself.
+ 1. Open the browser's console
+ 1. Type `JSON.stringify(Object.keys(Meteor.default_connection._methodHandlers).sort());` to view all methods defined on the client
+ 1. Type `JSON.stringify(Object.keys(Meteor.default_connection._mongo_livedata_collections).sort());` to view all collections accessible to the client
+ 1. Type `JSON.stringify(new Meteor.Collection("myCollection")._collection._docs._map);` to look up the contents of any collection called `myCollection` as seen by the client
