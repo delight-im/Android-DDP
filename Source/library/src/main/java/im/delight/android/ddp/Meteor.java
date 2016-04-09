@@ -373,12 +373,12 @@ public class Meteor {
 		}
 	}
 
-	private Fields fromJson(final String json) {
+	private <T> T fromJson(final String json, final Class<T> targetType) {
 		try {
 			if (json != null) {
 				final JsonNode jsonNode = mObjectMapper.readTree(json);
 
-				return mObjectMapper.convertValue(jsonNode, Fields.class);
+				return mObjectMapper.convertValue(jsonNode, targetType);
 			}
 			else {
 				return null;
@@ -478,7 +478,7 @@ public class Meteor {
 					}
 
 					if (mDataStore != null) {
-						mDataStore.onDataAdded(collectionName, documentID, fromJson(newValuesJson));
+						mDataStore.onDataAdded(collectionName, documentID, fromJson(newValuesJson, Fields.class));
 					}
 
 					mCallbackProxy.onDataAdded(collectionName, documentID, newValuesJson);
@@ -517,7 +517,7 @@ public class Meteor {
 					}
 
 					if (mDataStore != null) {
-						mDataStore.onDataChanged(collectionName, documentID, fromJson(updatedValuesJson), fromJson(removedValuesJson));
+						mDataStore.onDataChanged(collectionName, documentID, fromJson(updatedValuesJson, Fields.class), fromJson(removedValuesJson, String[].class));
 					}
 
 					mCallbackProxy.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);

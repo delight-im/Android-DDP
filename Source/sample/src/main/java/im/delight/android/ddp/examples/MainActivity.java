@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 		mMeteor.handleMessage("{\"msg\":\"added\",\"collection\":\"events\",\"id\":\"2H7ZDva9nhL4F42im\",\"fields\":{\"coords\":{\"type\":\"Point\",\"coordinates\":[1.23,-2.345]},\"events\":[{\"eventId\":\"946221490\",\"eventName\":\"Meteor 101\",\"eventUrl\":\"http://www.example.com/946221490\",\"eventTime\":1000000000000,\"eventUTCOffset\":-3600000}],\"groupId\":2018074068,\"groupName\":\"Meteor 101 A\",\"groupUrlname\":\"Meteor-101-A\"}}");
 
 		// mock some data that is being changed
-		mMeteor.handleMessage("{\"msg\":\"changed\",\"collection\":\"people\",\"id\":\"ev\",\"fields\":{\"age\":23,\"location\":{\"region\":\"New South Wales\"}},\"cleared\":{\"gender\":null}}");
+		mMeteor.handleMessage("{\"msg\":\"changed\",\"collection\":\"people\",\"id\":\"ev\",\"fields\":{\"age\":23,\"location\":{\"region\":\"New South Wales\"}},\"cleared\":[\"gender\"]}");
 
 		// mock some data that is being removed
 		mMeteor.handleMessage("{\"msg\":\"removed\",\"collection\":\"people\",\"id\":\"ca\"}");

@@ -68,7 +68,7 @@ public final class InMemoryDatabase implements Database {
 	}
 
 	@Override
-	public void onDataChanged(final String collectionName, final String documentId, final Fields updatedValues, final Fields removedValues) {
+	public void onDataChanged(final String collectionName, final String documentId, final Fields updatedValues, final String[] removedValues) {
 		if (mCollections.containsKey(collectionName)) {
 			final InMemoryCollection.DocumentsMap collectionData = mCollections.get(collectionName).getDocumentsMap();
 			final Fields documentData = collectionData.get(documentId).getFields();
@@ -78,7 +78,7 @@ public final class InMemoryDatabase implements Database {
 			}
 
 			if (removedValues != null) {
-				for (String removedKey : removedValues.keySet()) {
+				for (String removedKey : removedValues) {
 					documentData.remove(removedKey);
 				}
 			}

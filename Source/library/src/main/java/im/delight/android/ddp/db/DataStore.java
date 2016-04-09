@@ -38,7 +38,7 @@ public interface DataStore {
 	 * @param updatedValues the modified fields of the document
 	 * @param removedValues the deleted fields of the document
 	 */
-	void onDataChanged(String collectionName, String documentID, Fields updatedValues, Fields removedValues);
+	void onDataChanged(String collectionName, String documentID, Fields updatedValues, String[] removedValues);
 
 	/**
 	 * Receives data whenever an existing document is removed from a collection
