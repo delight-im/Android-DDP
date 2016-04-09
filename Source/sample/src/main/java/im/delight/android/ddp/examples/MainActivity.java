@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.MeteorCallback;
+import im.delight.android.ddp.db.memory.InMemoryDatabase;
 import android.app.Activity;
 import android.os.Bundle;
 
