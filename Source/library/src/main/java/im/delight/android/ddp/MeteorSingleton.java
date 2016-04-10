@@ -16,6 +16,7 @@ package im.delight.android.ddp;
  * limitations under the License.
  */
 
+import im.delight.android.ddp.db.DataStore;
 import android.content.Context;
 
 /** Provides a single access point to the `Meteor` class that can be used across `Activity` instances */
@@ -24,7 +25,23 @@ public class MeteorSingleton extends Meteor {
 	private static MeteorSingleton mInstance;
 
 	public synchronized static MeteorSingleton createInstance(final Context context, final String serverUri) {
-		return createInstance(context, serverUri, null);
+		if (mInstance != null) {
+			throw new IllegalStateException("An instance has already been created");
+		}
+
+		mInstance = new MeteorSingleton(context, serverUri);
+
+		return mInstance;
+	}
+
+	public synchronized static MeteorSingleton createInstance(final Context context, final String serverUri, final DataStore dataStore) {
+		if (mInstance != null) {
+			throw new IllegalStateException("An instance has already been created");
+		}
+
+		mInstance = new MeteorSingleton(context, serverUri, dataStore);
+
+		return mInstance;
 	}
 
 	public synchronized static MeteorSingleton createInstance(final Context context, final String serverUri, final String protocolVersion) {
@@ -32,12 +49,17 @@ public class MeteorSingleton extends Meteor {
 			throw new IllegalStateException("An instance has already been created");
 		}
 
-		if (protocolVersion == null) {
-			mInstance = new MeteorSingleton(context, serverUri);
+		mInstance = new MeteorSingleton(context, serverUri, protocolVersion);
+
+		return mInstance;
+	}
+
+	public synchronized static MeteorSingleton createInstance(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
+		if (mInstance != null) {
+			throw new IllegalStateException("An instance has already been created");
 		}
-		else {
-			mInstance = new MeteorSingleton(context, serverUri, protocolVersion);
-		}
+
+		mInstance = new MeteorSingleton(context, serverUri, protocolVersion, dataStore);
 
 		return mInstance;
 	}
@@ -68,8 +90,16 @@ public class MeteorSingleton extends Meteor {
 		super(context, serverUri);
 	}
 
+	private MeteorSingleton(final Context context, final String serverUri, final DataStore dataStore) {
+		super(context, serverUri, dataStore);
+	}
+
 	private MeteorSingleton(final Context context, final String serverUri, final String protocolVersion) {
 		super(context, serverUri, protocolVersion);
+	}
+
+	private MeteorSingleton(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
+		super(context, serverUri, protocolVersion, dataStore);
 	}
 
 }
