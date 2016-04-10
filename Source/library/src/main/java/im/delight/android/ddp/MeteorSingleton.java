@@ -54,6 +54,16 @@ public class MeteorSingleton extends Meteor {
 		return mInstance != null;
 	}
 
+	public synchronized static void destroyInstance() {
+		if (mInstance == null) {
+			throw new IllegalStateException("Please call `createInstance(...)` first");
+		}
+
+		mInstance.disconnect();
+		mInstance.removeCallbacks();
+		mInstance = null;
+	}
+
 	private MeteorSingleton(final Context context, final String serverUri) {
 		super(context, serverUri);
 	}
