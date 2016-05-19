@@ -236,7 +236,13 @@ public class Meteor {
 				return;
 			}
 		}
-
+		// first we remove the eventhandler
+		mWebSocket.setEventHandler(null);
+		// then we close the connection to avoid a lot of open connection
+		mWebSocket.close();
+		// this step may be useless
+		// just want to tell to the garbage collector to do his job
+		mWebSocket = null;
 		// create a new WebSocket connection for the data transfer
 		mWebSocket = new WebSocket(URI.create(mServerUri));
 
