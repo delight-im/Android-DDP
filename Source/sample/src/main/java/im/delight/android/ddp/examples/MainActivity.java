@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements MeteorCallback {
 		}
 
 		// subscribe to data from the server
-		String subscriptionId = mMeteor.subscribe("publicMessages");
+		String subscriptionId = mMeteor.subscribe("meetups");
 
 		// unsubscribe from data again (usually done later or not at all)
 		mMeteor.unsubscribe(subscriptionId);
