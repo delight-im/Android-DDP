@@ -90,6 +90,24 @@ public interface Query {
 	Query whereNotNull(String fieldName);
 
 	/**
+	 * Adds a filter to the query requiring the given field to have one of the specified values
+	 *
+	 * @param fieldName the name of the field to check
+	 * @param fieldValues the values to check against
+	 * @return this instance for chaining
+	 */
+	Query whereIn(String fieldName, Object[] fieldValues);
+
+	/**
+	 * Adds a filter to the query requiring the given field to have a value different from all the specified ones
+	 *
+	 * @param fieldName the name of the field to check
+	 * @param fieldValues the values to check against
+	 * @return this instance for chaining
+	 */
+	Query whereNotIn(String fieldName, Object[] fieldValues);
+
+	/**
 	 * Executes the query and returns all matching entries
 	 *
 	 * @return an array (never `null`) containing zero or more matches

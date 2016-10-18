@@ -152,6 +152,70 @@ public final class InMemoryQuery implements Query {
 	}
 
 	@Override
+	public Query whereIn(String fieldName, Object[] fieldValues) {
+		if (fieldValues == null || fieldValues.length == 0) {
+			return whereNull(fieldName);
+		}
+
+		final Iterator<InMemoryDocument> iterator = mDocuments.values().iterator();
+
+		InMemoryDocument entry;
+		while (iterator.hasNext()) {
+			entry = iterator.next();
+
+			boolean found = false;
+
+			if (entry.getField(fieldName) != null) {
+				for (Object fieldValue : fieldValues) {
+					if (entry.getField(fieldName).equals(fieldValue)) {
+						found = true;
+
+						break;
+					}
+				}
+			}
+
+			if (!found) {
+				iterator.remove();
+			}
+		}
+
+		return this;
+	}
+
+	@Override
+	public Query whereNotIn(String fieldName, Object[] fieldValues) {
+		if (fieldValues == null || fieldValues.length == 0) {
+			return whereNotNull(fieldName);
+		}
+
+		final Iterator<InMemoryDocument> iterator = mDocuments.values().iterator();
+
+		InMemoryDocument entry;
+		while (iterator.hasNext()) {
+			entry = iterator.next();
+
+			boolean found = false;
+
+			if (entry.getField(fieldName) != null) {
+				for (Object fieldValue : fieldValues) {
+					if (entry.getField(fieldName).equals(fieldValue)) {
+						found = true;
+
+						break;
+					}
+				}
+			}
+
+			if (found) {
+				iterator.remove();
+			}
+		}
+
+		return this;
+	}
+
+	@Override
 	public Document[] find() {
 		return mDocuments.values().toArray(new Document[mDocuments.size()]);
 	}

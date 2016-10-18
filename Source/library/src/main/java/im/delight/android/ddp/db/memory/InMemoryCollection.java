@@ -101,6 +101,16 @@ public final class InMemoryCollection implements Collection {
 	}
 
 	@Override
+	public Query whereIn(String fieldName, Object[] fieldValues) {
+		return new InMemoryQuery(mDocuments).whereIn(fieldName, fieldValues);
+	}
+
+	@Override
+	public Query whereNotIn(String fieldName, Object[] fieldValues) {
+		return new InMemoryQuery(mDocuments).whereNotIn(fieldName, fieldValues);
+	}
+
+	@Override
 	public Document[] find() {
 		return new InMemoryQuery(mDocuments).find();
 	}
