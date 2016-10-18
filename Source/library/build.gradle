@@ -27,7 +27,7 @@ android {
 dependencies {
 	compile files('libs/jackson-core-asl-1.9.7.jar')
 	compile files('libs/jackson-mapper-asl-1.9.7.jar')
-	compile files('libs/tubesock-0.0.13-SNAPSHOT.jar')
+	compile 'com.neovisionaries:nv-websocket-client:1.30'
 }
 
 task sourcesJar(type: Jar) {
