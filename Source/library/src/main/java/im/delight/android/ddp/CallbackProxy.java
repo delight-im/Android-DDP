@@ -30,133 +30,151 @@ public class CallbackProxy implements MeteorCallback {
 	public CallbackProxy() { }
 
 	public void addCallback(final MeteorCallback callback) {
-		mCallbacks.add(callback);
+		synchronized (mCallbacks) {
+			mCallbacks.add(callback);
+		}
 	}
 
 	public void removeCallback(final MeteorCallback callback) {
-		mCallbacks.remove(callback);
+		synchronized (mCallbacks) {
+			mCallbacks.remove(callback);
+		}
 	}
 
 	public void removeCallbacks() {
-		mCallbacks.clear();
+		synchronized (mCallbacks) {
+			mCallbacks.clear();
+		}
 	}
 
 	@Override
 	public void onConnect(final boolean signedInAutomatically) {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onConnect(signedInAutomatically);
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onConnect(signedInAutomatically);
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onDisconnect() {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onDisconnect();
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onDisconnect();
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onDataAdded(final String collectionName, final String documentID, final String newValuesJson) {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onDataAdded(collectionName, documentID, newValuesJson);
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onDataAdded(collectionName, documentID, newValuesJson);
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onDataChanged(final String collectionName, final String documentID, final String updatedValuesJson, final String removedValuesJson) {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onDataChanged(collectionName, documentID, updatedValuesJson, removedValuesJson);
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onDataRemoved(final String collectionName, final String documentID) {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onDataRemoved(collectionName, documentID);
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onDataRemoved(collectionName, documentID);
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
 
 	@Override
 	public void onException(final Exception e) {
-		// iterate over all the registered callbacks
-		for (final MeteorCallback callback : mCallbacks) {
-			// if the callback exists
-			if (callback != null) {
-				// execute the callback on the main thread
-				mUiHandler.post(new Runnable() {
+		synchronized (mCallbacks) {
+			// iterate over all the registered callbacks
+			for (final MeteorCallback callback : mCallbacks) {
+				// if the callback exists
+				if (callback != null) {
+					// execute the callback on the main thread
+					mUiHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// run the proxied method with the same parameters
-						callback.onException(e);
-					}
+						@Override
+						public void run() {
+							// run the proxied method with the same parameters
+							callback.onException(e);
+						}
 
-				});
+					});
+				}
 			}
 		}
 	}
