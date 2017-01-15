@@ -20,7 +20,7 @@ import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.db.Collection;
 import im.delight.android.ddp.db.Database;
 import im.delight.android.ddp.Fields;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Database that is stored in memory */
 public final class InMemoryDatabase implements Database {
@@ -108,6 +108,6 @@ public final class InMemoryDatabase implements Database {
 	}
 
 	/** Data type for the map backing the database */
-	private static class CollectionsMap extends HashMap<String, InMemoryCollection> { }
+	private static class CollectionsMap extends ConcurrentHashMap<String, InMemoryCollection> { }
 
 }

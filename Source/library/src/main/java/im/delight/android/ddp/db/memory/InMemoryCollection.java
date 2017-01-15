@@ -16,7 +16,7 @@ package im.delight.android.ddp.db.memory;
  * limitations under the License.
  */
 
-import java.util.LinkedHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import im.delight.android.ddp.db.Collection;
 import im.delight.android.ddp.db.Document;
@@ -145,7 +145,7 @@ public final class InMemoryCollection implements Collection {
 	}
 
 	/** Data type for the map backing the collection */
-	protected static class DocumentsMap extends LinkedHashMap<String, InMemoryDocument> {
+	protected static class DocumentsMap extends ConcurrentHashMap<String, InMemoryDocument> {
 
 		public DocumentsMap() {
 			super();
