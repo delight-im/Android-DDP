@@ -1,0 +1,11 @@
+// MiaTua added file for adding the needed options to the android build of cordova.
+// This file will be copied to the cordova build for android.
+// See https://www.thepolyglotdeveloper.com/2015/06/extending-the-gradle-build-file-in-apache-cordova-5-0/
+android {
+	packagingOptions {
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/ASL2.0'
+	}
+}
+
