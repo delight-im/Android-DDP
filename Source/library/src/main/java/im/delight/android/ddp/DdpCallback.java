@@ -45,5 +45,13 @@ public interface DdpCallback {
 	 * @param documentID the ID of the document that is being removed
 	 */
 	void onDataRemoved(String collectionName, String documentID);
-
+	
+	/**
+	 * Callback that is executed whenever a subscription stopped and there are no listeners waiting for it.
+	 * This can happen when the server decides to stop the subscription or when
+	 * subscribing or unsubscribing without a listener.
+	 *  
+	 * @param subscriptionId The subscription ID returned by subscribe.
+	 */
+	void onNoSub(String subscriptionId);
 }

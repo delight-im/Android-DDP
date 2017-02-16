@@ -18,6 +18,7 @@ package im.delight.android.ddp;
 
 import android.os.Handler;
 import android.os.Looper;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +26,15 @@ import java.util.List;
 public class CallbackProxy implements MeteorCallback {
 
 	private final List<MeteorCallback> mCallbacks = new LinkedList<MeteorCallback>();
-	private final Handler mUiHandler = new Handler(Looper.getMainLooper());
+	private final Handler mUiHandler/* = new Handler(Looper.getMainLooper())*/;
 
-	public CallbackProxy() { }
+	public CallbackProxy() {
+		mUiHandler = new Handler(Looper.getMainLooper());
+	}
+
+	public CallbackProxy(Looper i_looperForCallbacks) {
+		mUiHandler = new Handler(i_looperForCallbacks);
+	}
 
 	public void addCallback(final MeteorCallback callback) {
 		mCallbacks.add(callback);
@@ -134,6 +141,26 @@ public class CallbackProxy implements MeteorCallback {
 					public void run() {
 						// run the proxied method with the same parameters
 						callback.onDataRemoved(collectionName, documentID);
+					}
+
+				});
+			}
+		}
+	}
+	
+	@Override
+	public void onNoSub(final String subscriptionId) {
+		// iterate over all the registered callbacks
+		for (final MeteorCallback callback : mCallbacks) {
+			// if the callback exists
+			if (callback != null) {
+				// execute the callback on the main thread
+				mUiHandler.post(new Runnable() {
+
+					@Override
+					public void run() {
+						// run the proxied method with the same parameters
+						callback.onNoSub(subscriptionId);
 					}
 
 				});

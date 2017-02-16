@@ -18,20 +18,29 @@ package im.delight.android.ddp;
 
 import im.delight.android.ddp.db.DataStore;
 import im.delight.android.ddp.db.Database;
+
 import java.net.URI;
+
 import android.content.SharedPreferences;
 import android.content.Context;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Queue;
 import java.util.Iterator;
+
 import org.codehaus.jackson.map.ObjectMapper;
+
 import java.util.UUID;
 import java.util.Arrays;
 import java.io.IOException;
+
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonNode;
+
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+
 import com.firebase.tubesock.WebSocket;
 import com.firebase.tubesock.WebSocketEventHandler;
 import com.firebase.tubesock.WebSocketMessage;
@@ -63,7 +72,7 @@ public class Meteor {
 	/** The number of unsuccessful attempts to re-connect in sequence */
 	private int mReconnectAttempts;
 	/** The callbacks that will handle events and receive messages from this client */
-	protected final CallbackProxy mCallbackProxy = new CallbackProxy();
+	protected final CallbackProxy mCallbackProxy /*= new CallbackProxy()*/;
 	private String mSessionID;
 	private boolean mConnected;
 	private String mLoggedInUserId;
@@ -80,6 +89,9 @@ public class Meteor {
 	public Meteor(final Context context, final String serverUri) {
 		this(context, serverUri, (DataStore) null);
 	}
+	public Meteor(final Context context, final String serverUri, android.os.Looper i_looperForCallbacks) {
+		this(context, serverUri, (DataStore) null, i_looperForCallbacks);
+	}
 
 	/**
 	 * Returns a new instance for a client connecting to a server via DDP over websocket
@@ -92,6 +104,9 @@ public class Meteor {
 	 */
 	public Meteor(final Context context, final String serverUri, final DataStore dataStore) {
 		this(context, serverUri, SUPPORTED_DDP_VERSIONS[0], dataStore);
+	}
+	public Meteor(final Context context, final String serverUri, final DataStore dataStore, android.os.Looper i_looperForCallbacks) {
+		this(context, serverUri, SUPPORTED_DDP_VERSIONS[0], dataStore, i_looperForCallbacks);
 	}
 
 	/**
@@ -107,6 +122,9 @@ public class Meteor {
 		this(context, serverUri, protocolVersion, null);
 	}
 
+	public Meteor(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
+		this(context, serverUri, protocolVersion, dataStore, null);
+	}
 	/**
 	 * Returns a new instance for a client connecting to a server via DDP over websocket
 	 *
@@ -117,7 +135,7 @@ public class Meteor {
 	 * @param protocolVersion the desired DDP protocol version
 	 * @param dataStore the data store to write data to
 	 */
-	public Meteor(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore) {
+	public Meteor(final Context context, final String serverUri, final String protocolVersion, final DataStore dataStore, android.os.Looper i_looperForCallbacks) {
 		if (!isVersionSupported(protocolVersion)) {
 			throw new IllegalArgumentException("DDP protocol version not supported: "+protocolVersion);
 		}
@@ -192,7 +210,8 @@ public class Meteor {
 		};
 
 		// create a map that holds the pending Listener instances
-		mListeners = new HashMap<String, Listener>();
+		//mListeners = new HashMap<String, Listener>();
+		mListeners = new ConcurrentHashMap<String, Listener>();
 
 		// create a queue that holds undispatched messages waiting to be sent
 		mQueuedMessages = new ConcurrentLinkedQueue<String>();
@@ -203,6 +222,13 @@ public class Meteor {
 		mDdpVersion = protocolVersion;
 		// count the number of failed attempts to re-connect
 		mReconnectAttempts = 0;
+		
+		if (i_looperForCallbacks!=null) {
+			mCallbackProxy = new CallbackProxy(i_looperForCallbacks);
+		}
+		else {
+			mCallbackProxy = new CallbackProxy();
+		}
 	}
 
 	/** Attempts to establish the connection to the server */
@@ -634,6 +660,11 @@ public class Meteor {
 						mListeners.remove(subscriptionId);
 
 						mCallbackProxy.forUnsubscribeListener((UnsubscribeListener) listener).onSuccess();
+					}
+					else if (subscriptionId!=null) {
+						// This is either a server side subscription stop or a
+						// client side request without a callback.
+						mCallbackProxy.onNoSub(subscriptionId);
 					}
 				}
 			}
@@ -1146,7 +1177,7 @@ public class Meteor {
 	 *
 	 * @return the last login token or `null`
 	 */
-	private String getLoginToken() {
+	public String getLoginToken() {
 		return getSharedPreferences().getString(Preferences.Keys.LOGIN_TOKEN, null);
 	}
 
