@@ -35,7 +35,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
      ```gradle
      dependencies {
-         compile 'com.github.delight-im:Android-DDP:v3.1.2'
+         compile 'com.github.delight-im:Android-DDP:v3.2.0'
      }
      ```
 
@@ -376,6 +376,18 @@ Query query = mMeteor.getDatabase().getCollection(collectionName).whereNull(fiel
 ```java
 // String fieldName = "modifiedAt";
 Query query = mMeteor.getDatabase().getCollection(collectionName).whereNotNull(fieldName);
+```
+
+```java
+// String fieldName = "age";
+// Integer[] fieldValues = new Integer[] { 60, 70, 80 };
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereIn(fieldName, fieldValues);
+```
+
+```java
+// String fieldName = "languageCode";
+// String[] fieldValues = new String[] { "zh", "es", "en", "hi", "ar" };
+Query query = mMeteor.getDatabase().getCollection(collectionName).whereNotIn(fieldName, fieldValues);
 ```
 
 Any query can be executed by a `find` or `findOne` call. The step of first creating the `Query` instance can be skipped if you chain the calls to execute the query immediately.
