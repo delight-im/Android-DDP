@@ -442,7 +442,7 @@ All contributions are welcome! If you wish to contribute, please create an issue
 
 ## Dependencies
 
- * [TubeSock](https://github.com/firebase/TubeSock) — [Firebase](https://github.com/firebase) — [MIT License](http://firebase.mit-license.org/)
+ * [nv-websocket-client](https://github.com/TakahikoKawasaki/nv-websocket-client) — [Takahiko Kawasaki](https://github.com/TakahikoKawasaki) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
  * [Jackson Core](https://github.com/FasterXML/jackson-core) — [FasterXML](https://github.com/FasterXML) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
  * [Jackson ObjectMapper](https://github.com/FasterXML/jackson-databind) — [FasterXML](https://github.com/FasterXML) — [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
