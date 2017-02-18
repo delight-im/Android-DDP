@@ -35,7 +35,7 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
 
      ```gradle
      dependencies {
-         compile 'com.github.delight-im:Android-DDP:v3.2.0'
+         compile 'com.github.delight-im:Android-DDP:v3.3.0'
      }
      ```
 
