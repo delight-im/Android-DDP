@@ -145,6 +145,7 @@ public class Meteor {
 
 				mConnected = true;
 				mReconnectAttempts = 0;
+
 				initConnection(mSessionID);
 			}
 
@@ -154,9 +155,12 @@ public class Meteor {
 				log("  onClose");
 
 				final boolean lostConnection = mConnected;
+
 				mConnected = false;
+
 				if (lostConnection) {
 					mReconnectAttempts++;
+
 					if (mReconnectAttempts <= RECONNECT_ATTEMPTS_MAX) {
 						// try to re-connect automatically
 						reconnect();
@@ -201,8 +205,10 @@ public class Meteor {
 
 		// save the server URI
 		mServerUri = serverUri;
+
 		// try with the preferred DDP protocol version first
 		mDdpVersion = protocolVersion;
+
 		// count the number of failed attempts to re-connect
 		mReconnectAttempts = 0;
 	}
@@ -260,12 +266,15 @@ public class Meteor {
 	 */
 	private void initConnection(final String existingSessionID) {
 		final Map<String, Object> data = new HashMap<String, Object>();
+
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.CONNECT);
 		data.put(Protocol.Field.VERSION, mDdpVersion);
 		data.put(Protocol.Field.SUPPORT, SUPPORTED_DDP_VERSIONS);
+
 		if (existingSessionID != null) {
 			data.put(Protocol.Field.SESSION, existingSessionID);
 		}
+
 		send(data);
 	}
 
@@ -400,6 +409,7 @@ public class Meteor {
 	 */
 	private void handleMessage(final String payload) {
 		final JsonNode data;
+
 		try {
 			data = mObjectMapper.readTree(payload);
 		}
@@ -445,6 +455,7 @@ public class Meteor {
 				}
 				else if (message.equals(Protocol.Message.PING)) {
 					final String id;
+
 					if (data.has(Protocol.Field.ID)) {
 						id = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -456,6 +467,7 @@ public class Meteor {
 				}
 				else if (message.equals(Protocol.Message.ADDED) || message.equals(Protocol.Message.ADDED_BEFORE)) {
 					final String documentID;
+
 					if (data.has(Protocol.Field.ID)) {
 						documentID = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -464,6 +476,7 @@ public class Meteor {
 					}
 
 					final String collectionName;
+
 					if (data.has(Protocol.Field.COLLECTION)) {
 						collectionName = data.get(Protocol.Field.COLLECTION).getTextValue();
 					}
@@ -472,6 +485,7 @@ public class Meteor {
 					}
 
 					final String newValuesJson;
+
 					if (data.has(Protocol.Field.FIELDS)) {
 						newValuesJson = data.get(Protocol.Field.FIELDS).toString();
 					}
@@ -487,6 +501,7 @@ public class Meteor {
 				}
 				else if (message.equals(Protocol.Message.CHANGED)) {
 					final String documentID;
+
 					if (data.has(Protocol.Field.ID)) {
 						documentID = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -495,6 +510,7 @@ public class Meteor {
 					}
 
 					final String collectionName;
+
 					if (data.has(Protocol.Field.COLLECTION)) {
 						collectionName = data.get(Protocol.Field.COLLECTION).getTextValue();
 					}
@@ -503,6 +519,7 @@ public class Meteor {
 					}
 
 					final String updatedValuesJson;
+
 					if (data.has(Protocol.Field.FIELDS)) {
 						updatedValuesJson = data.get(Protocol.Field.FIELDS).toString();
 					}
@@ -511,6 +528,7 @@ public class Meteor {
 					}
 
 					final String removedValuesJson;
+
 					if (data.has(Protocol.Field.CLEARED)) {
 						removedValuesJson = data.get(Protocol.Field.CLEARED).toString();
 					}
@@ -526,6 +544,7 @@ public class Meteor {
 				}
 				else if (message.equals(Protocol.Message.REMOVED)) {
 					final String documentID;
+
 					if (data.has(Protocol.Field.ID)) {
 						documentID = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -534,6 +553,7 @@ public class Meteor {
 					}
 
 					final String collectionName;
+
 					if (data.has(Protocol.Field.COLLECTION)) {
 						collectionName = data.get(Protocol.Field.COLLECTION).getTextValue();
 					}
@@ -564,6 +584,7 @@ public class Meteor {
 					}
 
 					final String id;
+
 					if (data.has(Protocol.Field.ID)) {
 						id = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -577,6 +598,7 @@ public class Meteor {
 						mListeners.remove(id);
 
 						final String result;
+
 						if (data.has(Protocol.Field.RESULT)) {
 							result = data.get(Protocol.Field.RESULT).toString();
 						}
@@ -597,6 +619,7 @@ public class Meteor {
 					if (data.has(Protocol.Field.SUBS)) {
 						final Iterator<JsonNode> elements = data.get(Protocol.Field.SUBS).getElements();
 						String subscriptionId;
+
 						while (elements.hasNext()) {
 							subscriptionId = elements.next().getTextValue();
 
@@ -612,6 +635,7 @@ public class Meteor {
 				}
 				else if (message.equals(Protocol.Message.NOSUB)) {
 					final String subscriptionId;
+
 					if (data.has(Protocol.Field.ID)) {
 						subscriptionId = data.get(Protocol.Field.ID).getTextValue();
 					}
@@ -801,8 +825,9 @@ public class Meteor {
 	 * @param listener the listener to call on success/error
 	 */
 	public void remove(final String collectionName, final String documentId, final ResultListener listener) {
-		Map<String, Object> query = new HashMap<String, Object>();
+		final Map<String, Object> query = new HashMap<String, Object>();
 		query.put(MongoDb.Field.ID, documentId);
+
 		call("/"+collectionName+"/remove", new Object[] { query }, listener);
 	}
 
@@ -844,6 +869,7 @@ public class Meteor {
 	 */
 	private void login(final String username, final String email, final String password, final ResultListener listener) {
 		final Map<String, Object> userData = new HashMap<String, Object>();
+
 		if (username != null) {
 			userData.put("username", username);
 		}
@@ -939,13 +965,17 @@ public class Meteor {
 		}
 
 		final Map<String, Object> accountData = new HashMap<String, Object>();
+
 		if (username != null) {
 			accountData.put("username", username);
 		}
+
 		if (email != null) {
 			accountData.put("email", email);
 		}
+
 		accountData.put("password", password);
+
 		if (profile != null) {
 			accountData.put("profile", profile);
 		}
@@ -1031,17 +1061,20 @@ public class Meteor {
 			mListeners.put(callId, listener);
 		}
 
-		// send the request
 		final Map<String, Object> data = new HashMap<String, Object>();
+
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.METHOD);
 		data.put(Protocol.Field.METHOD, methodName);
 		data.put(Protocol.Field.ID, callId);
+
 		if (params != null) {
 			data.put(Protocol.Field.PARAMS, params);
 		}
+
 		if (randomSeed != null) {
 			data.put(Protocol.Field.RANDOM_SEED, randomSeed);
 		}
+
 		send(data);
 	}
 
@@ -1083,14 +1116,16 @@ public class Meteor {
 			mListeners.put(subscriptionId, listener);
 		}
 
-		// send the request
 		final Map<String, Object> data = new HashMap<String, Object>();
+
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.SUBSCRIBE);
 		data.put(Protocol.Field.NAME, subscriptionName);
 		data.put(Protocol.Field.ID, subscriptionId);
+
 		if (params != null) {
 			data.put(Protocol.Field.PARAMS, params);
 		}
+
 		send(data);
 
 		// return the generated subscription ID
@@ -1118,10 +1153,10 @@ public class Meteor {
 			mListeners.put(subscriptionId, listener);
 		}
 
-		// send the request
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put(Protocol.Field.MESSAGE, Protocol.Message.UNSUBSCRIBE);
 		data.put(Protocol.Field.ID, subscriptionId);
+
 		send(data);
 	}
 
@@ -1140,8 +1175,7 @@ public class Meteor {
 	 * @param token the login token to save
 	 */
 	private void saveLoginToken(final String token) {
-		final SharedPreferences prefs = getSharedPreferences();
-		final SharedPreferences.Editor editor = prefs.edit();
+		final SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(Preferences.Keys.LOGIN_TOKEN, token);
 		editor.apply();
 	}
