@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MeteorAndroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="enterName">Enter Name</string>
+    <string name="enterEmail">Enter your email</string>
+    <string name="enterPassword">Enter your password</string>
+    <string name="askToRegister">Don\'t have account? Register</string>
+    <string name="register">Register</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_todo_list">TodoList</string>
+</resources>
