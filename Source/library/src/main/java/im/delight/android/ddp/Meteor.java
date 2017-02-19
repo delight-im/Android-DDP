@@ -239,12 +239,17 @@ public class Meteor {
 	 */
 	private void openConnection(final boolean isReconnect) {
 		if (isReconnect) {
+			if (mWebSocket != null){
+				// first we remove the eventhandler
+				mWebSocket.setEventHandler(null);
+				// then we close the connection to avoid a lot of open connection
+				mWebSocket.close();
+			}
 			if (mConnected) {
 				initConnection(mSessionID);
 				return;
 			}
 		}
-
 		// create a new WebSocket connection for the data transfer
 		try {
 			mWebSocket = new WebSocketFactory().setConnectionTimeout(30000).createSocket(mServerUri);
