@@ -144,6 +144,24 @@ Connect your native Android apps, written in Java, to apps built with the [Meteo
    // mMeteor.removeCallback(callback);
    ```
 
+ * Available data types
+
+   | JavaScript / JSON                                          | Java / Android                                                                                                                                                        |
+   | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | **`String`** (e.g. `"John"` or `'Jane'`)                   | **`String`** (e.g. `"John"` or `"Jane"`)                                                                                                                              |
+   | **`Number`** (e.g. `42`)                                   | **`byte`** (e.g. `(byte) 42`)                                                                                                                                         |
+   |                                                            | **`short`** (e.g. `(short) 42`)                                                                                                                                       |
+   |                                                            | **`int`** (e.g. `42`)                                                                                                                                                 |
+   |                                                            | **`long`** (e.g. `42L`)                                                                                                                                               |
+   |                                                            | **`float`** (e.g. `3.14f`)                                                                                                                                            |
+   |                                                            | **`double`** (e.g. `3.14`)                                                                                                                                            |
+   | **`Boolean`** (e.g. `true`)                                | **`boolean`** (e.g. `true`)                                                                                                                                           |
+   | **`Array`** (e.g. `[ 7, "Hi", true ]`)                     | **`Object[]`** (e.g. `new Object[] { 7, "Hi", true }`)                                                                                                                |
+   |                                                            | **`List<Object>`** (e.g. `List<Object> list = new LinkedList<Object>(); list.add(7); list.add("Hi"); list.add(true);`)                                                |
+   | **`Object`** (e.g. `{ "amount": 100, "currency": "USD" }`) | **`Map<String, Object>`** (e.g. `Map<String, Object> map = new HashMap<String, Object>(); map.put("amount", 100); map.put("currency", "USD");`)                       |
+   |                                                            | **`MyClass`** (e.g. `public class MyClass { public int amount; public String currency; } MyClass myObj = new MyClass(); myObj.amount = 100; myObj.currency = "USD";`) |
+   | `null`                                                     | `null`                                                                                                                                                                |
+
  * Inserting data into a collection
 
    ```java
