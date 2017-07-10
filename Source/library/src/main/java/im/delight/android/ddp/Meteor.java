@@ -1241,8 +1241,9 @@ public class Meteor {
 		mCallbackProxy.onConnect(signedInAutomatically);
 
 		// try to dispatch queued messages now
-		for (String queuedMessage : mQueuedMessages) {
-			send(queuedMessage);
+		String message =null;
+		while((message = mQueuedMessages.poll()) != null){
+			send(message);
 		}
 	}
 
