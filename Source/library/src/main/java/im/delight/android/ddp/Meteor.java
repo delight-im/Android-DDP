@@ -858,6 +858,18 @@ public class Meteor {
 	}
 
 	/**
+	 * Sign in the user with third party auth provider
+	 *
+	 * Please note that this requires the `accounts-base` package
+	 *
+	 * @param authData the sign in parameters
+	 * @param listener the listener to call on success/error
+	 */
+	public void loginWithCustom(final Map<String, Object> authData, final ResultListener listener) {
+		call("login", new Object[] { authData }, listener);
+	}
+
+	/**
 	 * Sign in the user with the given username or email address and the specified password
 	 *
 	 * Please note that this requires the `accounts-password` package
