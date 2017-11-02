@@ -282,7 +282,6 @@ public class Meteor {
 	public void disconnect() {
 		mConnected = false;
 		mListeners.clear();
-		mSessionID = null;
 
 		if (mWebSocket != null) {
 			try {
