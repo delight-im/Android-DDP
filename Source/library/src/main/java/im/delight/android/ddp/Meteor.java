@@ -1269,5 +1269,14 @@ public class Meteor {
 			return null;
 		}
 	}
+	
+	/**
+	 * Returns the session ID for the connection
+	 *
+	 * @return the session ID or 'null'
+	 */
+	public String getSessionID() {
+		return mSessionID;
+	}
 
 }
